@@ -22,7 +22,7 @@ export default function Members() {
 
   return (
     <MembersManagementPage
-      client={entityClient as unknown as Parameters<typeof MembersManagementPage>[0]['client']}
+      client={entityClient}
       entity={currentEntity}
       currentUserId={user.uid}
     />

@@ -19,7 +19,7 @@ export default function Workspaces() {
 
   return (
     <EntityListPage
-      client={entityClient as unknown as Parameters<typeof EntityListPage>[0]['client']}
+      client={entityClient}
       onSelectEntity={handleSelectEntity}
     />
   );

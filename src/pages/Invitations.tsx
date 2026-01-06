@@ -18,7 +18,7 @@ export default function Invitations() {
 
   return (
     <InvitationsPage
-      client={entityClient as unknown as Parameters<typeof InvitationsPage>[0]['client']}
+      client={entityClient}
       onInvitationAccepted={handleInvitationAccepted}
     />
   );

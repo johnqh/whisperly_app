@@ -6,6 +6,8 @@
       "dependencies": {
         "@sudobility/di": "^1.5.8",
         "@sudobility/di_web": "^0.1.17",
+        "@sudobility/entity_client": "^0.0.4",
+        "@sudobility/entity_pages": "^0.0.5",
         "@sudobility/ratelimit-components": "^1.0.2",
         "@sudobility/ratelimit_client": "^0.0.13",
         "@sudobility/ratelimit_pages": "^1.0.17",
@@ -418,6 +420,12 @@
     "@sudobility/di": ["@sudobility/di@1.5.8", "", { "peerDependencies": { "@notifee/react-native": ">=7.0.0", "@react-native-async-storage/async-storage": ">=1.19.0", "@react-native-community/netinfo": ">=9.0.0", "@react-native-firebase/analytics": ">=18.0.0", "@react-native-firebase/app": ">=18.0.0", "@react-native-firebase/messaging": ">=18.0.0", "@react-native-firebase/remote-config": ">=18.0.0", "@sudobility/types": "^1.9.32", "firebase": ">=10.0.0", "react": ">=18.0.0", "react-native": ">=0.70.0" }, "optionalPeers": ["@notifee/react-native", "@react-native-async-storage/async-storage", "@react-native-community/netinfo", "@react-native-firebase/analytics", "@react-native-firebase/app", "@react-native-firebase/messaging", "@react-native-firebase/remote-config", "firebase", "react-native"] }, "sha512-NhG/TIAxLkm3DIc8ZyYB5ZtlB4IAktqpdQGCKEw7vg170LUAG08vbaIo/ZWb07p0tEWGyjysAxB5+1lJDoBRAg=="],
 
     "@sudobility/di_web": ["@sudobility/di_web@0.1.17", "", { "peerDependencies": { "@sudobility/components": "^4.0.93", "@sudobility/di": "^1.5.8", "@sudobility/types": "^1.9.36", "react": "^18.0.0 || ^19.0.0" } }, "sha512-4IqjrrxBldoLrdPwE9MiZ0rpUGgw3SpkLA0DXqHExC0v7qGsEZO2mWfvqKxnWzeLv+pUpaIvbhgn+Ac/q9+N7w=="],
+
+    "@sudobility/entity-components": ["@sudobility/entity-components@1.0.2", "", { "optionalDependencies": { "@rollup/rollup-linux-x64-gnu": "4.52.5", "@rollup/rollup-linux-x64-musl": "4.52.5" }, "peerDependencies": { "@sudobility/components": "*", "@sudobility/design": "^1.1.14", "@sudobility/types": "^1.9.37", "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-f19JpyMfbQxuAfiUCHevULLMWxH4XKVfkGiUYYs5vRH5g/zR0fm4FVZt0m//ZH/lfZxi//4KprLfB2mf4SNxoA=="],
+
+    "@sudobility/entity_client": ["@sudobility/entity_client@0.0.4", "", { "peerDependencies": { "@sudobility/types": "^1.9.40", "@tanstack/react-query": "^5.0.0", "react": "^18.0.0 || ^19.0.0" } }, "sha512-3dvObTwcULCgxd+L/syaFZOCGb59AFvod3YQyv874kFZZyrfDYkpqxoWX+z7BRUuR5ZOFabu2xT5DghGkkbFcQ=="],
+
+    "@sudobility/entity_pages": ["@sudobility/entity_pages@0.0.5", "", { "peerDependencies": { "@sudobility/entity-components": "^1.0.2", "@sudobility/entity_client": "^0.0.4", "@sudobility/types": "^1.9.40", "@tanstack/react-query": "^5.0.0", "react": "^18.0.0 || ^19.0.0" } }, "sha512-hSEa3V7pvcs3Dx2NxJ/t8tC4UpXVwzr7ja0bYrLQYQFFnrHlPmfykQzDqjuK1ojvzA5NuGB/9ry8W/qBjZvurg=="],
 
     "@sudobility/ratelimit-components": ["@sudobility/ratelimit-components@1.0.2", "", { "optionalDependencies": { "@rollup/rollup-linux-x64-gnu": "4.52.5", "@rollup/rollup-linux-x64-musl": "4.52.5" }, "peerDependencies": { "@sudobility/components": "*", "@sudobility/design": "^1.1.14", "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0", "recharts": "^2.0.0" } }, "sha512-PrKQhtuKWirVAUlTnEk0AuOJdLIfYC0SjKZRJYN+vwysQQgWU6qlNCJWWrrBxnZq9OF5WHp3gPFK/nMlfpTIKQ=="],
 
