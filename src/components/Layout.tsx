@@ -2,11 +2,15 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { useAuth } from '../contexts/AuthContext';
+import { useEntity } from '../contexts/EntityContext';
+import { EntitySelector } from '@sudobility/entity-components';
 
 const navItems = [
   { path: '/', label: 'Dashboard' },
   { path: '/projects', label: 'Projects' },
   { path: '/analytics', label: 'Analytics' },
+  { path: '/rate-limits', label: 'Rate Limits' },
+  { path: '/members', label: 'Members' },
   { path: '/settings', label: 'Settings' },
   { path: '/subscription', label: 'Subscription' },
 ];
@@ -14,6 +18,7 @@ const navItems = [
 export default function Layout() {
   const location = useLocation();
   const { user } = useAuth();
+  const { entities, currentEntity, setCurrentEntity } = useEntity();
 
   const handleSignOut = async () => {
     await signOut(auth);
@@ -25,10 +30,16 @@ export default function Layout() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
+              <div className="flex-shrink-0 flex items-center gap-4">
                 <Link to="/" className="text-xl font-bold text-primary-600">
                   Whisperly
                 </Link>
+                <EntitySelector
+                  entities={entities}
+                  currentEntity={currentEntity}
+                  onSelect={setCurrentEntity}
+                  onCreateNew={() => window.location.href = '/workspaces'}
+                />
               </div>
               <div className="hidden sm:ml-8 sm:flex sm:space-x-4">
                 {navItems.map(item => (

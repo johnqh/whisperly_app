@@ -1,7 +1,7 @@
 {
   "name": "@sudobility/whisperly_app",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,14 +11,21 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@sudobility/whisperly_client": "file:../whisperly_client",
-    "@sudobility/whisperly_lib": "file:../whisperly_lib",
-    "@sudobility/whisperly_types": "^1.0.2",
+    "@sudobility/di": "^1.5.8",
+    "@sudobility/di_web": "^0.1.17",
+    "@sudobility/ratelimit-components": "^1.0.2",
+    "@sudobility/ratelimit_client": "^0.0.13",
+    "@sudobility/ratelimit_pages": "^1.0.17",
+    "@sudobility/types": "^1.9.40",
+    "@sudobility/whisperly_client": "^1.0.1",
+    "@sudobility/whisperly_lib": "^1.0.3",
+    "@sudobility/whisperly_types": "^1.0.3",
     "@tanstack/react-query": "^5.90.5",
     "firebase": "^11.0.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "react-router-dom": "^7.6.1",
+    "recharts": "^3.6.0",
     "zustand": "^5.0.0"
   },
   "devDependencies": {

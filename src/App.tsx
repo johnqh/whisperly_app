@@ -8,6 +8,10 @@ import Glossaries from './pages/Glossaries';
 import Settings from './pages/Settings';
 import Analytics from './pages/Analytics';
 import Subscription from './pages/Subscription';
+import RateLimits from './pages/RateLimits';
+import Workspaces from './pages/Workspaces';
+import Members from './pages/Members';
+import Invitations from './pages/Invitations';
 import Login from './pages/Login';
 import Loading from './components/Loading';
 
@@ -43,7 +47,11 @@ function App() {
         <Route path="projects/:projectId/glossaries" element={<Glossaries />} />
         <Route path="settings" element={<Settings />} />
         <Route path="analytics" element={<Analytics />} />
+        <Route path="rate-limits" element={<RateLimits />} />
         <Route path="subscription" element={<Subscription />} />
+        <Route path="workspaces" element={<Workspaces />} />
+        <Route path="members" element={<Members />} />
+        <Route path="invitations" element={<Invitations />} />
       </Route>
     </Routes>
   );
