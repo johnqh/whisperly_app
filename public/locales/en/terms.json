@@ -1,0 +1,26 @@
+{
+  "title": "Terms of Service",
+  "lastUpdated": "Last updated: {{date}}",
+  "sections": {
+    "acceptance": {
+      "title": "Acceptance of Terms",
+      "content": "By accessing or using Whisperly, you agree to be bound by these Terms of Service."
+    },
+    "services": {
+      "title": "Services",
+      "content": "Whisperly provides translation API services with glossary support."
+    },
+    "userResponsibilities": {
+      "title": "User Responsibilities",
+      "content": "You are responsible for maintaining the security of your account and API keys."
+    },
+    "limitations": {
+      "title": "Limitations",
+      "content": "Our service is provided 'as is' without warranties of any kind."
+    },
+    "contact": {
+      "title": "Contact",
+      "content": "For questions about these terms, please contact us."
+    }
+  }
+}

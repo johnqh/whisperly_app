@@ -4,12 +4,12 @@ import {
   ReactNode,
 } from 'react';
 import { useFirebaseAuth, type UseFirebaseAuthResult } from '@sudobility/whisperly_lib';
-import { auth } from '../services/firebase';
+import { auth } from '../config/firebase';
 
 const AuthContext = createContext<UseFirebaseAuthResult | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const authState = useFirebaseAuth(auth);
+  const authState = useFirebaseAuth(auth!);
 
   return (
     <AuthContext.Provider value={authState}>{children}</AuthContext.Provider>

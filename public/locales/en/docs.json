@@ -1,0 +1,32 @@
+{
+  "title": "Documentation",
+  "subtitle": "Learn how to use Whisperly's translation API",
+  "sections": {
+    "gettingStarted": {
+      "title": "Getting Started",
+      "description": "Quick start guide to integrating Whisperly"
+    },
+    "api": {
+      "title": "API Reference",
+      "description": "Complete API documentation"
+    },
+    "glossaries": {
+      "title": "Glossaries",
+      "description": "Managing your translation glossaries"
+    },
+    "examples": {
+      "title": "Examples",
+      "description": "Code examples and integration guides"
+    }
+  },
+  "sidebar": {
+    "overview": "Overview",
+    "quickStart": "Quick Start",
+    "authentication": "Authentication",
+    "translate": "Translate API",
+    "projects": "Projects",
+    "glossaries": "Glossaries",
+    "errors": "Error Handling",
+    "rateLimit": "Rate Limits"
+  }
+}

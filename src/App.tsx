@@ -1,59 +1,126 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './contexts/AuthContext';
-import Layout from './components/Layout';
-import Dashboard from './pages/Dashboard';
-import Projects from './pages/Projects';
-import ProjectDetail from './pages/ProjectDetail';
-import Glossaries from './pages/Glossaries';
-import Settings from './pages/Settings';
-import Analytics from './pages/Analytics';
-import Subscription from './pages/Subscription';
-import RateLimits from './pages/RateLimits';
-import Workspaces from './pages/Workspaces';
-import Members from './pages/Members';
-import Invitations from './pages/Invitations';
-import Login from './pages/Login';
-import Loading from './components/Loading';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { HelmetProvider } from "react-helmet-async";
+import { I18nextProvider } from "react-i18next";
+import i18n from "./i18n";
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+// Providers
+import { ThemeProvider } from "./context/ThemeContext";
+import { ToastProvider } from "./context/ToastContext";
+import { AuthProviderWrapper } from "./components/providers/AuthProviderWrapper";
+import { ApiProvider } from "./context/ApiContext";
 
-  if (loading) {
-    return <Loading />;
-  }
+// Layout Components
+import { LanguageRedirect } from "./components/layout/LanguageRedirect";
+import { LanguageValidator } from "./components/layout/LanguageValidator";
+import { ProtectedRoute } from "./components/layout/ProtectedRoute";
+import { EntityRedirect } from "./components/layout/EntityRedirect";
+import { DashboardLayout } from "./components/layout/DashboardLayout";
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+// Public Pages
+import { HomePage } from "./pages/HomePage";
+import { PricingPage } from "./pages/PricingPage";
+import { PrivacyPage } from "./pages/PrivacyPage";
+import { TermsPage } from "./pages/TermsPage";
+import { SettingsPage } from "./pages/SettingsPage";
+import Login from "./pages/Login";
 
-  return <>{children}</>;
+// Dashboard Pages
+import Dashboard from "./pages/Dashboard";
+import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
+import Glossaries from "./pages/Glossaries";
+import Settings from "./pages/Settings";
+import Analytics from "./pages/Analytics";
+import Subscription from "./pages/Subscription";
+import RateLimits from "./pages/RateLimits";
+import Workspaces from "./pages/Workspaces";
+import Members from "./pages/Members";
+import Invitations from "./pages/Invitations";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 1,
+    },
+  },
+});
+
+function AppRoutes() {
+  return (
+    <Routes>
+      {/* Root redirect to language-prefixed route */}
+      <Route path="/" element={<LanguageRedirect />} />
+
+      {/* Language-prefixed routes */}
+      <Route path="/:lang" element={<LanguageValidator />}>
+        {/* Public routes */}
+        <Route index element={<HomePage />} />
+        <Route path="login" element={<Login />} />
+        <Route path="pricing" element={<PricingPage />} />
+        <Route path="settings" element={<SettingsPage />} />
+        <Route path="privacy" element={<PrivacyPage />} />
+        <Route path="terms" element={<TermsPage />} />
+
+        {/* Protected Dashboard - redirect to entity */}
+        <Route
+          path="dashboard"
+          element={
+            <ProtectedRoute>
+              <EntityRedirect />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected Dashboard with entity */}
+        <Route
+          path="dashboard/:entitySlug"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="projects" element={<Projects />} />
+          <Route path="projects/:projectId" element={<ProjectDetail />} />
+          <Route path="projects/:projectId/glossaries" element={<Glossaries />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="analytics" element={<Analytics />} />
+          <Route path="rate-limits" element={<RateLimits />} />
+          <Route path="subscription" element={<Subscription />} />
+          <Route path="workspaces" element={<Workspaces />} />
+          <Route path="members" element={<Members />} />
+          <Route path="invitations" element={<Invitations />} />
+        </Route>
+      </Route>
+
+      {/* Catch-all redirect */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
 }
 
 function App() {
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <Layout />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Dashboard />} />
-        <Route path="projects" element={<Projects />} />
-        <Route path="projects/:projectId" element={<ProjectDetail />} />
-        <Route path="projects/:projectId/glossaries" element={<Glossaries />} />
-        <Route path="settings" element={<Settings />} />
-        <Route path="analytics" element={<Analytics />} />
-        <Route path="rate-limits" element={<RateLimits />} />
-        <Route path="subscription" element={<Subscription />} />
-        <Route path="workspaces" element={<Workspaces />} />
-        <Route path="members" element={<Members />} />
-        <Route path="invitations" element={<Invitations />} />
-      </Route>
-    </Routes>
+    <HelmetProvider>
+      <I18nextProvider i18n={i18n}>
+        <ThemeProvider>
+          <QueryClientProvider client={queryClient}>
+            <ToastProvider>
+              <AuthProviderWrapper>
+                <ApiProvider>
+                  <BrowserRouter>
+                    <AppRoutes />
+                  </BrowserRouter>
+                </ApiProvider>
+              </AuthProviderWrapper>
+            </ToastProvider>
+          </QueryClientProvider>
+        </ThemeProvider>
+      </I18nextProvider>
+    </HelmetProvider>
   );
 }
 

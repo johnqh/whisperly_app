@@ -1,0 +1,44 @@
+{
+  "title": "Use Cases",
+  "subtitle": "See how Whisperly helps with different translation needs",
+  "overview": {
+    "title": "Translation Solutions",
+    "description": "Whisperly provides consistent, high-quality translations with custom glossary support"
+  },
+  "websites": {
+    "title": "Website Localization",
+    "subtitle": "Translate your website with consistent terminology",
+    "description": "Keep your brand voice consistent across all languages with custom glossaries.",
+    "features": [
+      "Consistent brand terminology",
+      "SEO-friendly translations",
+      "Easy CMS integration",
+      "Real-time translation updates"
+    ],
+    "cta": "Start Translating"
+  },
+  "apps": {
+    "title": "Mobile App Translation",
+    "subtitle": "Localize your mobile applications",
+    "description": "Translate your iOS and Android apps while maintaining UI consistency.",
+    "features": [
+      "Context-aware translations",
+      "Character limit awareness",
+      "Platform-specific terminology",
+      "String file export"
+    ],
+    "cta": "Get Started"
+  },
+  "documents": {
+    "title": "Document Translation",
+    "subtitle": "Translate documents and content",
+    "description": "Translate technical documents, marketing materials, and more.",
+    "features": [
+      "Technical terminology support",
+      "Batch translation",
+      "Version control friendly",
+      "Multiple file formats"
+    ],
+    "cta": "Try Now"
+  }
+}

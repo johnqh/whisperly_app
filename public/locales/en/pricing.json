@@ -1,0 +1,49 @@
+{
+  "title": "Pricing",
+  "subtitle": "Simple, transparent pricing for everyone",
+  "tiers": {
+    "starter": {
+      "name": "Starter",
+      "description": "For individuals and small projects",
+      "price": "Free",
+      "features": [
+        "1,000 requests/month",
+        "Basic glossary support",
+        "API access",
+        "Community support"
+      ]
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "For growing teams and businesses",
+      "price": "$29/month",
+      "features": [
+        "50,000 requests/month",
+        "Advanced glossary management",
+        "Priority API access",
+        "Email support",
+        "Analytics dashboard"
+      ]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "description": "For large organizations",
+      "price": "Custom",
+      "features": [
+        "Unlimited requests",
+        "Custom SLA",
+        "Dedicated support",
+        "Custom integrations",
+        "On-premise option"
+      ]
+    }
+  },
+  "cta": {
+    "getStarted": "Get Started",
+    "contactSales": "Contact Sales",
+    "currentPlan": "Current Plan"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Dashboard",
+  "projects": {
+    "title": "Projects",
+    "new": "New Project",
+    "empty": "No projects yet",
+    "emptyDescription": "Create your first project to get started",
+    "name": "Project Name",
+    "displayName": "Display Name",
+    "description": "Description",
+    "instructions": "Glossary Instructions",
+    "created": "Created",
+    "glossaryCount": "{{count}} glossary entries"
+  },
+  "glossaries": {
+    "title": "Glossaries",
+    "new": "New Entry",
+    "empty": "No glossary entries",
+    "emptyDescription": "Add terms to maintain consistent translations",
+    "term": "Term",
+    "translations": "Translations",
+    "context": "Context",
+    "addLanguage": "Add Language"
+  },
+  "analytics": {
+    "title": "Analytics",
+    "overview": "Overview",
+    "totalRequests": "Total Requests",
+    "totalStrings": "Strings Translated",
+    "totalCharacters": "Characters",
+    "successRate": "Success Rate",
+    "byProject": "By Project",
+    "byDate": "By Date"
+  },
+  "subscription": {
+    "title": "Subscription",
+    "currentPlan": "Current Plan",
+    "usage": "Usage",
+    "monthlyLimit": "Monthly Limit",
+    "upgrade": "Upgrade Plan"
+  },
+  "settings": {
+    "title": "Settings",
+    "organizationName": "Organization Name",
+    "organizationPath": "Organization Path",
+    "pathDescription": "Used in your API URLs: /translate/{path}/{project}"
+  },
+  "rateLimits": {
+    "title": "Rate Limits",
+    "current": "Current Usage",
+    "monthly": "Monthly",
+    "hourly": "Hourly"
+  },
+  "sidebar": {
+    "projects": "Projects",
+    "analytics": "Analytics",
+    "subscription": "Subscription",
+    "settings": "Settings",
+    "rateLimits": "Rate Limits",
+    "workspace": "Workspace",
+    "members": "Members",
+    "invitations": "Invitations",
+    "workspaces": "Workspaces"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "title": "Settings",
+  "appearance": {
+    "title": "Appearance",
+    "theme": "Theme",
+    "themes": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "fontSize": "Font Size",
+    "fontSizes": {
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large"
+    }
+  },
+  "language": {
+    "title": "Language",
+    "select": "Select Language"
+  }
+}

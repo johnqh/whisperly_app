@@ -1,0 +1,26 @@
+{
+  "title": "Privacy Policy",
+  "lastUpdated": "Last updated: {{date}}",
+  "sections": {
+    "introduction": {
+      "title": "Introduction",
+      "content": "This Privacy Policy describes how Whisperly collects, uses, and protects your information."
+    },
+    "dataCollection": {
+      "title": "Data Collection",
+      "content": "We collect information you provide directly to us, including account information and usage data."
+    },
+    "dataUse": {
+      "title": "How We Use Your Data",
+      "content": "We use collected data to provide and improve our services, and to communicate with you."
+    },
+    "dataSecurity": {
+      "title": "Data Security",
+      "content": "We implement appropriate security measures to protect your personal information."
+    },
+    "contact": {
+      "title": "Contact Us",
+      "content": "If you have questions about this Privacy Policy, please contact us."
+    }
+  }
+}

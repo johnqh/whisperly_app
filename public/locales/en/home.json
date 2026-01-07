@@ -1,0 +1,33 @@
+{
+  "hero": {
+    "title": "Translation API with Glossary Support",
+    "subtitle": "Translate your content with consistent terminology using custom glossaries",
+    "cta": {
+      "getStarted": "Get Started",
+      "viewDocs": "View Documentation"
+    }
+  },
+  "features": {
+    "title": "Why Whisperly?",
+    "glossary": {
+      "title": "Custom Glossaries",
+      "description": "Define your terminology once, apply it consistently across all translations"
+    },
+    "api": {
+      "title": "Simple API",
+      "description": "RESTful API that's easy to integrate into your existing workflow"
+    },
+    "languages": {
+      "title": "Multiple Languages",
+      "description": "Support for dozens of languages with high-quality translations"
+    }
+  },
+  "useCases": {
+    "title": "Use Cases",
+    "subtitle": "See how Whisperly can help with your translation needs"
+  },
+  "pricing": {
+    "title": "Simple Pricing",
+    "subtitle": "Start free, scale as you grow"
+  }
+}
