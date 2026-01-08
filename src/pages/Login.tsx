@@ -6,7 +6,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from 'firebase/auth';
-import { auth } from '../config/firebase';
+import { getFirebaseAuth } from '@sudobility/auth_lib';
 import Button from '../components/Button';
 
 export default function Login() {
@@ -23,6 +23,7 @@ export default function Login() {
     setIsLoading(true);
 
     try {
+      const auth = getFirebaseAuth();
       if (!auth) throw new Error('Firebase not configured');
       if (isSignUp) {
         await createUserWithEmailAndPassword(auth, email, password);
@@ -42,6 +43,7 @@ export default function Login() {
     setIsLoading(true);
 
     try {
+      const auth = getFirebaseAuth();
       if (!auth) throw new Error('Firebase not configured');
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);

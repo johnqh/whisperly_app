@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
-import { Navigate, useLocation, useParams } from "react-router-dom";
+import { ProtectedRoute as SharedProtectedRoute } from "@sudobility/components";
 import { useAuthStatus } from "@sudobility/auth-components";
-import Loading from "../Loading";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -9,20 +8,21 @@ interface ProtectedRouteProps {
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, loading } = useAuthStatus();
-  const location = useLocation();
-  const { lang } = useParams<{ lang: string }>();
 
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (!user) {
-    // Redirect to login with return URL
-    const returnUrl = encodeURIComponent(location.pathname + location.search);
-    return <Navigate to={`/${lang || "en"}/login?returnUrl=${returnUrl}`} replace />;
-  }
-
-  return <>{children}</>;
+  return (
+    <SharedProtectedRoute
+      isAuthenticated={!!user}
+      isLoading={loading}
+      redirectPath="/:lang"
+      loadingComponent={
+        <div className="min-h-screen flex items-center justify-center bg-theme-bg-primary">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      }
+    >
+      {children}
+    </SharedProtectedRoute>
+  );
 }
 
 export default ProtectedRoute;

@@ -33,7 +33,7 @@ const NAV_ITEMS = [
 export function DashboardLayout() {
   const { t } = useTranslation("dashboard");
   const location = useLocation();
-  const navigate = useLocalizedNavigate();
+  const { navigate } = useLocalizedNavigate();
   const { entitySlug } = useParams<{ entitySlug: string }>();
   const { data: entities } = useEntities(entityClient);
 

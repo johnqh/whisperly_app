@@ -1,9 +1,12 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import type { ReactNode } from "react";
-import { networkClient, getInfoService } from "@sudobility/di";
+import { getInfoService } from "@sudobility/di";
 import { InfoType } from "@sudobility/types";
 import { useAuthStatus } from "@sudobility/auth-components";
-import { auth } from "../config/firebase";
+import {
+  getFirebaseAuth,
+  useFirebaseAuthNetworkClient,
+} from "@sudobility/auth_lib";
 import { CONSTANTS } from "../config/constants";
 import { ApiContext, type ApiContextValue } from "./apiContextDef";
 
@@ -17,6 +20,8 @@ export function ApiProvider({ children }: ApiProviderProps) {
   const { user, loading: authLoading } = useAuthStatus();
   const [token, setToken] = useState<string | null>(null);
   const [tokenLoading, setTokenLoading] = useState(false);
+  const resilientNetworkClient = useFirebaseAuthNetworkClient();
+  const auth = getFirebaseAuth();
 
   const baseUrl = CONSTANTS.API_URL;
   const userId = user?.uid ?? null;
@@ -66,7 +71,7 @@ export function ApiProvider({ children }: ApiProviderProps) {
     return () => {
       mounted = false;
     };
-  }, [userId]);
+  }, [userId, auth]);
 
   // Refresh token function for when token expires
   const refreshToken = useCallback(async (): Promise<string | null> => {
@@ -86,11 +91,11 @@ export function ApiProvider({ children }: ApiProviderProps) {
       setToken(null);
       return null;
     }
-  }, []);
+  }, [auth]);
 
   const value = useMemo<ApiContextValue>(
     () => ({
-      networkClient,
+      networkClient: resilientNetworkClient,
       baseUrl,
       userId,
       token,
@@ -99,7 +104,16 @@ export function ApiProvider({ children }: ApiProviderProps) {
       testMode,
       refreshToken,
     }),
-    [baseUrl, userId, token, authLoading, tokenLoading, testMode, refreshToken],
+    [
+      resilientNetworkClient,
+      baseUrl,
+      userId,
+      token,
+      authLoading,
+      tokenLoading,
+      testMode,
+      refreshToken,
+    ],
   );
 
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;

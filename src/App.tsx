@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
 import { I18nextProvider } from "react-i18next";
+import { NetworkProvider } from "@sudobility/devops-components";
+import { getNetworkService } from "@sudobility/di";
 import i18n from "./i18n";
 
 // Providers
@@ -9,6 +11,9 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { ToastProvider } from "./context/ToastContext";
 import { AuthProviderWrapper } from "./components/providers/AuthProviderWrapper";
 import { ApiProvider } from "./context/ApiContext";
+
+// Get network service instance for NetworkProvider
+const networkService = getNetworkService();
 
 // Layout Components
 import { LanguageRedirect } from "./components/layout/LanguageRedirect";
@@ -107,17 +112,19 @@ function App() {
     <HelmetProvider>
       <I18nextProvider i18n={i18n}>
         <ThemeProvider>
-          <QueryClientProvider client={queryClient}>
-            <ToastProvider>
-              <AuthProviderWrapper>
-                <ApiProvider>
-                  <BrowserRouter>
-                    <AppRoutes />
-                  </BrowserRouter>
-                </ApiProvider>
-              </AuthProviderWrapper>
-            </ToastProvider>
-          </QueryClientProvider>
+          <NetworkProvider networkService={networkService}>
+            <QueryClientProvider client={queryClient}>
+              <ToastProvider>
+                <AuthProviderWrapper>
+                  <ApiProvider>
+                    <BrowserRouter>
+                      <AppRoutes />
+                    </BrowserRouter>
+                  </ApiProvider>
+                </AuthProviderWrapper>
+              </ToastProvider>
+            </QueryClientProvider>
+          </NetworkProvider>
         </ThemeProvider>
       </I18nextProvider>
     </HelmetProvider>

@@ -1,34 +1,22 @@
-import { useNavigate, type NavigateOptions } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useCallback } from "react";
+import { useLocalizedNavigate as useSharedLocalizedNavigate } from "@sudobility/components";
+import { isLanguageSupported } from "../config/constants";
+import type { SupportedLanguage } from "../config/constants";
 
-export function useLocalizedNavigate() {
-  const navigate = useNavigate();
-  const { i18n } = useTranslation();
+export const useLocalizedNavigate = () => {
+  const result = useSharedLocalizedNavigate({
+    isLanguageSupported,
+    defaultLanguage: "en",
+    storageKey: "language",
+  });
 
-  const localizedNavigate = useCallback(
-    (to: string | number, options?: NavigateOptions) => {
-      if (typeof to === "number") {
-        navigate(to);
-        return;
-      }
-
-      const currentLang = i18n.language || "en";
-
-      // Don't localize external links, hash links, or already localized paths
-      const shouldLocalize =
-        !to.startsWith("http") &&
-        !to.startsWith("#") &&
-        !to.startsWith("mailto:") &&
-        !to.match(/^\/[a-z]{2}(\/|$)/);
-
-      const localizedTo = shouldLocalize ? `/${currentLang}${to}` : to;
-      navigate(localizedTo, options);
-    },
-    [navigate, i18n.language],
-  );
-
-  return localizedNavigate;
-}
+  return {
+    navigate: result.navigate,
+    switchLanguage: result.switchLanguage as (
+      newLanguage: SupportedLanguage,
+      currentPath?: string,
+    ) => void,
+    currentLanguage: result.currentLanguage as SupportedLanguage,
+  };
+};
 
 export default useLocalizedNavigate;

@@ -1,6 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
-import { auth } from '../config/firebase';
+import { getFirebaseAuth } from '@sudobility/auth_lib';
 import { useAuth } from '../contexts/AuthContext';
 import { useEntity } from '../contexts/EntityContext';
 import { EntitySelector } from '@sudobility/entity-components';
@@ -21,6 +21,7 @@ export default function Layout() {
   const { entities, currentEntity, setCurrentEntity } = useEntity();
 
   const handleSignOut = async () => {
+    const auth = getFirebaseAuth();
     if (auth) await signOut(auth);
   };
 
