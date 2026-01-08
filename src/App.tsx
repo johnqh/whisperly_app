@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
@@ -11,9 +12,6 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { ToastProvider } from "./context/ToastContext";
 import { AuthProviderWrapper } from "./components/providers/AuthProviderWrapper";
 import { ApiProvider } from "./context/ApiContext";
-
-// Get network service instance for NetworkProvider
-const networkService = getNetworkService();
 
 // Layout Components
 import { LanguageRedirect } from "./components/layout/LanguageRedirect";
@@ -108,6 +106,8 @@ function AppRoutes() {
 }
 
 function App() {
+  const networkService = useMemo(() => getNetworkService(), []);
+
   return (
     <HelmetProvider>
       <I18nextProvider i18n={i18n}>

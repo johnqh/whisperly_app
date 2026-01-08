@@ -9,7 +9,6 @@ import {
 // Re-export Theme and FontSize for consumers
 export { Theme, FontSize } from "@sudobility/components";
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useTheme = useSharedTheme;
 
 interface ThemeProviderProps {
