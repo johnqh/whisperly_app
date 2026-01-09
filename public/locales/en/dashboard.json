@@ -61,5 +61,16 @@
     "members": "Members",
     "invitations": "Invitations",
     "workspaces": "Workspaces"
+  },
+  "navigation": {
+    "overview": "Overview",
+    "projects": "Projects",
+    "analytics": "Analytics",
+    "rateLimits": "Rate Limits",
+    "subscription": "Subscription",
+    "workspaces": "Workspaces",
+    "members": "Members",
+    "invitations": "Invitations",
+    "settings": "Settings"
   }
 }

@@ -1,14 +1,31 @@
 {
+  "meta": {
+    "title": "AI-Powered Translation API",
+    "description": "Translate your content with consistent terminology using custom glossaries. Fast, accurate, and easy to integrate."
+  },
   "hero": {
     "title": "Translation API with Glossary Support",
     "subtitle": "Translate your content with consistent terminology using custom glossaries",
     "cta": {
       "getStarted": "Get Started",
-      "viewDocs": "View Documentation"
+      "viewDocs": "View Documentation",
+      "learnMore": "Learn More"
     }
   },
   "features": {
     "title": "Why Whisperly?",
+    "fast": {
+      "title": "Lightning Fast",
+      "description": "Get translations in milliseconds with our optimized API infrastructure"
+    },
+    "accurate": {
+      "title": "Highly Accurate",
+      "description": "AI-powered translations with custom glossary support for consistent terminology"
+    },
+    "easy": {
+      "title": "Easy to Use",
+      "description": "Simple REST API that integrates seamlessly into your existing workflow"
+    },
     "glossary": {
       "title": "Custom Glossaries",
       "description": "Define your terminology once, apply it consistently across all translations"

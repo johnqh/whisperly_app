@@ -1,14 +1,35 @@
 {
+  "meta": {
+    "title": "Terms of Service",
+    "description": "Read the terms and conditions for using Whisperly's translation API services."
+  },
   "title": "Terms of Service",
   "lastUpdated": "Last updated: {{date}}",
+  "intro": "Please read these Terms of Service carefully before using Whisperly's translation API services.",
   "sections": {
     "acceptance": {
       "title": "Acceptance of Terms",
-      "content": "By accessing or using Whisperly, you agree to be bound by these Terms of Service."
+      "content": "By accessing or using Whisperly, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services."
     },
     "services": {
       "title": "Services",
-      "content": "Whisperly provides translation API services with glossary support."
+      "content": "Whisperly provides translation API services with glossary support. We reserve the right to modify, suspend, or discontinue any part of our services at any time."
+    },
+    "accounts": {
+      "title": "User Accounts",
+      "content": "You are responsible for maintaining the security of your account and API keys. You must provide accurate information when creating an account and keep your credentials confidential."
+    },
+    "usage": {
+      "title": "Acceptable Use",
+      "content": "You agree to use our services only for lawful purposes. You may not use our API to translate content that violates applicable laws or infringes on third-party rights."
+    },
+    "termination": {
+      "title": "Termination",
+      "content": "We may terminate or suspend your access to our services at any time, with or without cause, with or without notice. Upon termination, your right to use the services will immediately cease."
+    },
+    "contact": {
+      "title": "Contact",
+      "content": "For questions about these terms, please contact us at legal@whisperly.io."
     },
     "userResponsibilities": {
       "title": "User Responsibilities",
@@ -17,10 +38,6 @@
     "limitations": {
       "title": "Limitations",
       "content": "Our service is provided 'as is' without warranties of any kind."
-    },
-    "contact": {
-      "title": "Contact",
-      "content": "For questions about these terms, please contact us."
     }
   }
 }

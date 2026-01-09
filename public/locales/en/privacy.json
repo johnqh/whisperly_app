@@ -1,10 +1,35 @@
 {
+  "meta": {
+    "title": "Privacy Policy",
+    "description": "Learn how Whisperly collects, uses, and protects your information."
+  },
   "title": "Privacy Policy",
   "lastUpdated": "Last updated: {{date}}",
+  "intro": "This Privacy Policy describes how Whisperly collects, uses, and protects your information when you use our translation API services.",
   "sections": {
     "introduction": {
       "title": "Introduction",
       "content": "This Privacy Policy describes how Whisperly collects, uses, and protects your information."
+    },
+    "collection": {
+      "title": "Information We Collect",
+      "content": "We collect information you provide directly to us, including account information, API usage data, and translation content you submit through our services."
+    },
+    "use": {
+      "title": "How We Use Your Information",
+      "content": "We use collected data to provide and improve our translation services, process your requests, communicate with you, and ensure the security of our platform."
+    },
+    "sharing": {
+      "title": "Information Sharing",
+      "content": "We do not sell your personal information. We may share data with service providers who assist in operating our platform, or when required by law."
+    },
+    "security": {
+      "title": "Data Security",
+      "content": "We implement appropriate technical and organizational security measures to protect your personal information against unauthorized access, alteration, or destruction."
+    },
+    "contact": {
+      "title": "Contact Us",
+      "content": "If you have questions about this Privacy Policy or our data practices, please contact us at privacy@whisperly.io."
     },
     "dataCollection": {
       "title": "Data Collection",
@@ -17,10 +42,6 @@
     "dataSecurity": {
       "title": "Data Security",
       "content": "We implement appropriate security measures to protect your personal information."
-    },
-    "contact": {
-      "title": "Contact Us",
-      "content": "If you have questions about this Privacy Policy, please contact us."
     }
   }
 }

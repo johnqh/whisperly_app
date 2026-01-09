@@ -1,49 +1,17 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
+import { AuthAction, useAuthStatus } from "@sudobility/auth-components";
 import {
-  TopbarProvider,
-  Topbar,
-  TopbarLeft,
-  TopbarRight,
-  TopbarNavigation,
-  TopbarLogo,
-  TopbarActions,
-  Logo,
-  type TopbarNavItem,
-} from "@sudobility/components";
-import {
-  AuthAction,
-  useAuthStatus,
-  type AuthMenuItem,
-} from "@sudobility/auth-components";
+  AppTopBarWithFirebaseAuth,
+  type MenuItemConfig,
+  type AuthMenuItem as BuildingBlocksAuthMenuItem,
+  type AuthActionProps,
+} from "@sudobility/building_blocks";
+import type { ComponentType } from "react";
 import { useLocalizedNavigate } from "../../hooks/useLocalizedNavigate";
-import {
-  CONSTANTS,
-  SUPPORTED_LANGUAGES,
-  isLanguageSupported,
-} from "../../config/constants";
+import { CONSTANTS } from "../../config/constants";
 import LocalizedLink from "./LocalizedLink";
-
-// Language display names and flags
-const LANGUAGE_INFO: Record<string, { name: string; flag: string }> = {
-  en: { name: "English", flag: "🇺🇸" },
-  ar: { name: "العربية", flag: "🇸🇦" },
-  de: { name: "Deutsch", flag: "🇩🇪" },
-  es: { name: "Español", flag: "🇪🇸" },
-  fr: { name: "Français", flag: "🇫🇷" },
-  it: { name: "Italiano", flag: "🇮🇹" },
-  ja: { name: "日本語", flag: "🇯🇵" },
-  ko: { name: "한국어", flag: "🇰🇷" },
-  pt: { name: "Português", flag: "🇧🇷" },
-  ru: { name: "Русский", flag: "🇷🇺" },
-  sv: { name: "Svenska", flag: "🇸🇪" },
-  th: { name: "ไทย", flag: "🇹🇭" },
-  uk: { name: "Українська", flag: "🇺🇦" },
-  vi: { name: "Tiếng Việt", flag: "🇻🇳" },
-  zh: { name: "简体中文", flag: "🇨🇳" },
-  "zh-hant": { name: "繁體中文", flag: "🇹🇼" },
-};
 
 interface TopBarProps {
   variant?: "default" | "transparent";
@@ -225,13 +193,13 @@ const MenuSettingsIcon = () => (
 const LinkWrapper = ({
   href,
   children,
-  ...props
+  className,
 }: {
   href: string;
   children: React.ReactNode;
-  [key: string]: unknown;
+  className?: string;
 }) => (
-  <LocalizedLink to={href} {...props}>
+  <LocalizedLink to={href} className={className}>
     {children}
   </LocalizedLink>
 );
@@ -240,22 +208,10 @@ export function TopBar({ variant = "default" }: TopBarProps) {
   const { t } = useTranslation("common");
   const { t: tDashboard } = useTranslation("dashboard");
   const location = useLocation();
-  const { navigate, switchLanguage, currentLanguage } = useLocalizedNavigate();
+  const { navigate } = useLocalizedNavigate();
   const { user } = useAuthStatus();
-  const [showLangMenu, setShowLangMenu] = useState(false);
 
   const isAuthenticated = !!user;
-
-  // Sort languages by their native name
-  const sortedLanguages = useMemo(() => {
-    return [...SUPPORTED_LANGUAGES]
-      .map((code) => ({
-        code,
-        name: LANGUAGE_INFO[code]?.name || code.toUpperCase(),
-        flag: LANGUAGE_INFO[code]?.flag || "🌐",
-      }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, []);
 
   // Extract entitySlug from URL if on dashboard page
   const pathSegments = location.pathname.split("/").filter(Boolean);
@@ -266,205 +222,126 @@ export function TopBar({ variant = "default" }: TopBarProps) {
       : null;
 
   // Build menu items for authenticated user dropdown
-  const menuItems: AuthMenuItem[] = isAuthenticated
-    ? [
-        {
-          id: "projects",
-          label: tDashboard("navigation.projects"),
-          icon: <MenuFolderIcon />,
-          onClick: () =>
-            navigate(
-              entitySlug ? `/dashboard/${entitySlug}/projects` : "/dashboard",
-            ),
-        },
-        {
-          id: "analytics",
-          label: tDashboard("navigation.analytics"),
-          icon: <MenuChartIcon />,
-          onClick: () =>
-            navigate(
-              entitySlug ? `/dashboard/${entitySlug}/analytics` : "/dashboard",
-            ),
-        },
-        {
-          id: "subscription",
-          label: tDashboard("navigation.subscription"),
-          icon: <MenuSubscriptionIcon />,
-          onClick: () =>
-            navigate(
-              entitySlug
-                ? `/dashboard/${entitySlug}/subscription`
-                : "/dashboard",
-            ),
-        },
-        {
-          id: "rate-limits",
-          label: tDashboard("navigation.rateLimits"),
-          icon: <MenuRateLimitsIcon />,
-          onClick: () =>
-            navigate(
-              entitySlug
-                ? `/dashboard/${entitySlug}/rate-limits`
-                : "/dashboard",
-            ),
-        },
-        {
-          id: "settings",
-          label: tDashboard("navigation.settings"),
-          icon: <MenuSettingsIcon />,
-          onClick: () =>
-            navigate(
-              entitySlug ? `/dashboard/${entitySlug}/settings` : "/dashboard",
-            ),
-          dividerAfter: true,
-        },
-      ]
-    : [];
+  const authenticatedMenuItems: BuildingBlocksAuthMenuItem[] = useMemo(() => {
+    if (!isAuthenticated) return [];
+
+    return [
+      {
+        id: "projects",
+        label: tDashboard("navigation.projects"),
+        icon: <MenuFolderIcon />,
+        onClick: () =>
+          navigate(
+            entitySlug ? `/dashboard/${entitySlug}/projects` : "/dashboard",
+          ),
+      },
+      {
+        id: "analytics",
+        label: tDashboard("navigation.analytics"),
+        icon: <MenuChartIcon />,
+        onClick: () =>
+          navigate(
+            entitySlug ? `/dashboard/${entitySlug}/analytics` : "/dashboard",
+          ),
+      },
+      {
+        id: "subscription",
+        label: tDashboard("navigation.subscription"),
+        icon: <MenuSubscriptionIcon />,
+        onClick: () =>
+          navigate(
+            entitySlug
+              ? `/dashboard/${entitySlug}/subscription`
+              : "/dashboard",
+          ),
+      },
+      {
+        id: "rate-limits",
+        label: tDashboard("navigation.rateLimits"),
+        icon: <MenuRateLimitsIcon />,
+        onClick: () =>
+          navigate(
+            entitySlug
+              ? `/dashboard/${entitySlug}/rate-limits`
+              : "/dashboard",
+          ),
+      },
+      {
+        id: "settings",
+        label: tDashboard("navigation.settings"),
+        icon: <MenuSettingsIcon />,
+        onClick: () =>
+          navigate(
+            entitySlug ? `/dashboard/${entitySlug}/settings` : "/dashboard",
+          ),
+        dividerAfter: true,
+      },
+    ];
+  }, [isAuthenticated, entitySlug, navigate, tDashboard]);
 
   // Build navigation items
-  const navItems: TopbarNavItem[] = [
-    {
-      id: "use-cases",
-      label: t("nav.useCases"),
-      icon: LightBulbIcon,
-      href: "/use-cases",
-    },
-    {
-      id: "docs",
-      label: t("nav.docs"),
-      icon: DocumentTextIcon,
-      href: "/docs",
-    },
-    {
-      id: "pricing",
-      label: t("nav.pricing"),
-      icon: CurrencyDollarIcon,
-      href: "/pricing",
-    },
-  ];
+  const navItems: MenuItemConfig[] = useMemo(() => {
+    const items: MenuItemConfig[] = [
+      {
+        id: "use-cases",
+        label: t("nav.useCases"),
+        icon: LightBulbIcon,
+        href: "/use-cases",
+      },
+      {
+        id: "docs",
+        label: t("nav.docs"),
+        icon: DocumentTextIcon,
+        href: "/docs",
+      },
+      {
+        id: "pricing",
+        label: t("nav.pricing"),
+        icon: CurrencyDollarIcon,
+        href: "/pricing",
+      },
+    ];
 
-  // Add dashboard if authenticated
-  if (isAuthenticated) {
-    navItems.push({
-      id: "dashboard",
-      label: t("nav.dashboard"),
-      icon: Squares2X2Icon,
-      href: "/dashboard",
-    });
-  }
-
-  // Settings always appears last in navigation
-  navItems.push({
-    id: "settings",
-    label: t("nav.settings"),
-    icon: Cog6ToothIcon,
-    href: "/settings",
-  });
-
-  const handleLogoClick = () => {
-    navigate("/");
-  };
-
-  const handleLanguageChange = (newLang: string) => {
-    if (isLanguageSupported(newLang)) {
-      switchLanguage(newLang);
-      setShowLangMenu(false);
+    // Add dashboard if authenticated
+    if (isAuthenticated) {
+      items.push({
+        id: "dashboard",
+        label: t("nav.dashboard"),
+        icon: Squares2X2Icon,
+        href: "/dashboard",
+      });
     }
-  };
+
+    // Settings always appears last in navigation
+    items.push({
+      id: "settings",
+      label: t("nav.settings"),
+      icon: Cog6ToothIcon,
+      href: "/settings",
+    });
+
+    return items;
+  }, [t, isAuthenticated]);
 
   return (
-    <>
-      <TopbarProvider
-        variant={variant === "transparent" ? "transparent" : "default"}
-        sticky
-      >
-        <Topbar
-          variant={variant === "transparent" ? "transparent" : "default"}
-          sticky
-          zIndex="highest"
-        >
-          <TopbarLeft>
-            <TopbarNavigation
-              items={navItems}
-              collapseBelow="lg"
-              LinkComponent={LinkWrapper}
-            >
-              <TopbarLogo onClick={handleLogoClick} size="md">
-                <Logo size="md" logoText={CONSTANTS.APP_NAME} />
-              </TopbarLogo>
-            </TopbarNavigation>
-          </TopbarLeft>
-
-          <TopbarRight>
-            <TopbarActions gap="md">
-              {/* Language Selector */}
-              <div className="relative">
-                <button
-                  onClick={() => setShowLangMenu(!showLangMenu)}
-                  className="flex items-center gap-2 px-3 py-2 h-10 rounded-lg hover:bg-theme-hover-bg transition-colors"
-                  aria-label="Select language"
-                >
-                  <span className="text-lg leading-none">
-                    {LANGUAGE_INFO[currentLanguage]?.flag || "🌐"}
-                  </span>
-                  <span className="hidden sm:block text-sm font-medium text-theme-text-secondary">
-                    {LANGUAGE_INFO[currentLanguage]?.name || "English"}
-                  </span>
-                  <svg
-                    className="w-4 h-4 text-theme-text-secondary"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-
-                {showLangMenu && (
-                  <>
-                    <div
-                      className="fixed inset-0 z-40"
-                      onClick={() => setShowLangMenu(false)}
-                    />
-                    <div className="absolute right-0 mt-2 w-48 bg-theme-bg-primary border border-theme-border rounded-lg shadow-lg z-50">
-                      {sortedLanguages.map((lang) => (
-                        <button
-                          key={lang.code}
-                          onClick={() => handleLanguageChange(lang.code)}
-                          className={`w-full px-4 py-2 text-left text-sm hover:bg-theme-hover-bg transition-colors flex items-center gap-2 ${
-                            lang.code === currentLanguage
-                              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                              : ""
-                          }`}
-                        >
-                          <span className="text-lg leading-none">
-                            {lang.flag}
-                          </span>
-                          <span>{lang.name}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* Auth Action (handles login button and user dropdown) */}
-              <AuthAction
-                avatarSize={32}
-                dropdownAlign="right"
-                onLoginClick={() => navigate("/login")}
-                menuItems={menuItems}
-              />
-            </TopbarActions>
-          </TopbarRight>
-        </Topbar>
-      </TopbarProvider>
-    </>
+    <AppTopBarWithFirebaseAuth
+      logo={{
+        src: "/logo.png",
+        appName: CONSTANTS.APP_NAME,
+        onClick: () => navigate("/"),
+      }}
+      menuItems={navItems}
+      collapseBelow="lg"
+      LinkComponent={LinkWrapper}
+      AuthActionComponent={
+        AuthAction as unknown as ComponentType<AuthActionProps>
+      }
+      onLoginClick={() => navigate("/login")}
+      authenticatedMenuItems={authenticatedMenuItems}
+      variant={variant === "transparent" ? "default" : "default"}
+      sticky
+      zIndex="highest"
+    />
   );
 }
 

@@ -1,6 +1,50 @@
 {
+  "meta": {
+    "title": "Pricing",
+    "description": "Simple, transparent pricing for everyone. Start free and scale as you grow."
+  },
   "title": "Pricing",
   "subtitle": "Simple, transparent pricing for everyone",
+  "plans": {
+    "free": {
+      "name": "Free",
+      "price": "$0/month",
+      "description": "For individuals and small projects",
+      "features": [
+        "1,000 requests/month",
+        "Basic glossary support",
+        "API access",
+        "Community support"
+      ],
+      "cta": "Get Started"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$29/month",
+      "description": "For growing teams and businesses",
+      "features": [
+        "50,000 requests/month",
+        "Advanced glossary management",
+        "Priority API access",
+        "Email support",
+        "Analytics dashboard"
+      ],
+      "cta": "Upgrade to Pro"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "Custom",
+      "description": "For large organizations",
+      "features": [
+        "Unlimited requests",
+        "Custom SLA",
+        "Dedicated support",
+        "Custom integrations",
+        "On-premise option"
+      ],
+      "cta": "Contact Sales"
+    }
+  },
   "tiers": {
     "starter": {
       "name": "Starter",
