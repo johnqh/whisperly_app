@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
   RateLimitsPage as RateLimitsPageComponent,
   RateLimitHistoryPage,
-} from '@sudobility/ratelimit-pages';
+} from '@sudobility/ratelimit_pages';
 import { useApi } from '../contexts/ApiContext';
 import { useNavigate } from 'react-router-dom';
 
