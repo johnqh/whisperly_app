@@ -5,6 +5,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { I18nextProvider } from "react-i18next";
 import { NetworkProvider } from "@sudobility/devops-components";
 import { getNetworkService } from "@sudobility/di";
+import { InfoBanner } from "@sudobility/di_web";
 import i18n from "./i18n";
 
 // Providers
@@ -12,6 +13,8 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { ToastProvider } from "./context/ToastContext";
 import { AuthProviderWrapper } from "./components/providers/AuthProviderWrapper";
 import { ApiProvider } from "./context/ApiContext";
+import { SubscriptionProviderWrapper } from "./components/providers/SubscriptionProviderWrapper";
+import { useCurrentEntity } from "./hooks/useCurrentEntity";
 
 // Layout Components
 import { LanguageRedirect } from "./components/layout/LanguageRedirect";
@@ -49,6 +52,20 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+// Wrapper that reads entity ID from URL and passes to subscription provider
+function EntityAwareSubscriptionProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { entityId } = useCurrentEntity();
+  return (
+    <SubscriptionProviderWrapper entityId={entityId}>
+      {children}
+    </SubscriptionProviderWrapper>
+  );
+}
 
 function AppRoutes() {
   return (
@@ -118,7 +135,10 @@ function App() {
                 <AuthProviderWrapper>
                   <ApiProvider>
                     <BrowserRouter>
-                      <AppRoutes />
+                      <EntityAwareSubscriptionProvider>
+                        <AppRoutes />
+                        <InfoBanner />
+                      </EntityAwareSubscriptionProvider>
                     </BrowserRouter>
                   </ApiProvider>
                 </AuthProviderWrapper>
