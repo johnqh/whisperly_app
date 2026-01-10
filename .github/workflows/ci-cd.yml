@@ -22,5 +22,5 @@ jobs:
   cicd:
     uses: johnqh/workflows/.github/workflows/unified-cicd.yml@main
     with:
-      skip-publish: true
+      skip-npm-publish: true
     secrets: inherit
