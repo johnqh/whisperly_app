@@ -6,28 +6,28 @@ import { ScreenContainer } from "./ScreenContainer";
 import { LocalizedLink } from "./LocalizedLink";
 import { useLocalizedNavigate } from "../../hooks/useLocalizedNavigate";
 import {
-  LayoutDashboard,
-  FolderOpen,
-  BarChart3,
-  Settings,
-  CreditCard,
-  Zap,
-  Users,
-  Building2,
-  Mail,
-  ChevronDown,
-} from "lucide-react";
+  Squares2X2Icon,
+  FolderOpenIcon,
+  ChartBarIcon,
+  Cog6ToothIcon,
+  CreditCardIcon,
+  BoltIcon,
+  UsersIcon,
+  BuildingOffice2Icon,
+  EnvelopeIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/24/outline";
 
 const NAV_ITEMS = [
-  { key: "overview", path: "", icon: LayoutDashboard },
-  { key: "projects", path: "projects", icon: FolderOpen },
-  { key: "analytics", path: "analytics", icon: BarChart3 },
-  { key: "rateLimits", path: "rate-limits", icon: Zap },
-  { key: "subscription", path: "subscription", icon: CreditCard },
-  { key: "workspaces", path: "workspaces", icon: Building2 },
-  { key: "members", path: "members", icon: Users },
-  { key: "invitations", path: "invitations", icon: Mail },
-  { key: "settings", path: "settings", icon: Settings },
+  { key: "overview", path: "", icon: Squares2X2Icon },
+  { key: "projects", path: "projects", icon: FolderOpenIcon },
+  { key: "analytics", path: "analytics", icon: ChartBarIcon },
+  { key: "rateLimits", path: "rate-limits", icon: BoltIcon },
+  { key: "subscription", path: "subscription", icon: CreditCardIcon },
+  { key: "workspaces", path: "workspaces", icon: BuildingOffice2Icon },
+  { key: "members", path: "members", icon: UsersIcon },
+  { key: "invitations", path: "invitations", icon: EnvelopeIcon },
+  { key: "settings", path: "settings", icon: Cog6ToothIcon },
 ];
 
 export function DashboardLayout() {
@@ -70,7 +70,7 @@ export function DashboardLayout() {
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <ChevronDownIcon className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               </div>
             </div>
 
