@@ -3,6 +3,13 @@
 ## Project Overview
 `@sudobility/whisperly_app` is the main React frontend application for Whisperly, a localization SaaS platform. It provides the user interface for managing translation projects, glossaries, subscriptions, and analytics.
 
+## Platform Support
+- **Web App**: Yes
+- **React Native**: No (web frontend only)
+- **Backend (Node.js/Bun)**: No (frontend only)
+
+This is a web-only application built with Vite and React. Tests use jsdom environment for DOM simulation.
+
 ## Tech Stack
 - **Runtime**: Bun
 - **Build Tool**: Vite 7.x
