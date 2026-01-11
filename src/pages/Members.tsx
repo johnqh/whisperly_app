@@ -4,13 +4,14 @@
  */
 
 import { MembersManagementPage } from '@sudobility/entity_pages';
-import { useEntity } from '../contexts/EntityContext';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuthStatus } from '@sudobility/auth-components';
+import { entityClient } from '../config/entityClient';
+import { useCurrentEntity } from '../hooks/useCurrentEntity';
 import Loading from '../components/Loading';
 
 export default function Members() {
-  const { entityClient, currentEntity, isLoading } = useEntity();
-  const { user } = useAuth();
+  const { currentEntity, isLoading } = useCurrentEntity();
+  const { user } = useAuthStatus();
 
   if (isLoading || !currentEntity) {
     return <Loading />;

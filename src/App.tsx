@@ -13,6 +13,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { ToastProvider } from "./context/ToastContext";
 import { AuthProviderWrapper } from "./components/providers/AuthProviderWrapper";
 import { ApiProvider } from "./context/ApiContext";
+import { CurrentEntityProvider } from "./context/CurrentEntityContext";
 import { SubscriptionProviderWrapper } from "./components/providers/SubscriptionProviderWrapper";
 import { useCurrentEntity } from "./hooks/useCurrentEntity";
 
@@ -55,15 +56,15 @@ const queryClient = new QueryClient({
   },
 });
 
-// Wrapper that reads entity ID from URL and passes to subscription provider
+// Wrapper that reads entity ID from context and passes to subscription provider
 function EntityAwareSubscriptionProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { entityId } = useCurrentEntity();
+  const { currentEntityId } = useCurrentEntity();
   return (
-    <SubscriptionProviderWrapper entityId={entityId}>
+    <SubscriptionProviderWrapper entityId={currentEntityId ?? undefined}>
       {children}
     </SubscriptionProviderWrapper>
   );
@@ -138,12 +139,14 @@ function App() {
               <ToastProvider>
                 <AuthProviderWrapper>
                   <ApiProvider>
-                    <BrowserRouter>
-                      <EntityAwareSubscriptionProvider>
-                        <AppRoutes />
-                        <InfoBanner />
-                      </EntityAwareSubscriptionProvider>
-                    </BrowserRouter>
+                    <CurrentEntityProvider>
+                      <BrowserRouter>
+                        <EntityAwareSubscriptionProvider>
+                          <AppRoutes />
+                          <InfoBanner />
+                        </EntityAwareSubscriptionProvider>
+                      </BrowserRouter>
+                    </CurrentEntityProvider>
                   </ApiProvider>
                 </AuthProviderWrapper>
               </ToastProvider>

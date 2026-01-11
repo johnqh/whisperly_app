@@ -32,26 +32,18 @@ const ENTITLEMENT_LEVELS: EntitlementLevels = {
   whisperly_pro: 2,
 };
 
-// LocalStorage key for last used entity
-const LAST_ENTITY_KEY = "whisperly_last_entity";
-
 export function PricingPage() {
   const { t } = useTranslation("pricing");
   const { t: tSub } = useTranslation("subscription");
   const { user, openModal } = useAuthStatus();
   const { products: rawProducts, currentSubscription, purchase } =
     useSafeSubscriptionContext();
-  const { entityId } = useCurrentEntity();
+  const { currentEntityId, currentEntitySlug } = useCurrentEntity();
   const { navigate } = useLocalizedNavigate();
   const { success, error: showError } = useToast();
 
   const isAuthenticated = !!user;
   const hasActiveSubscription = currentSubscription?.isActive ?? false;
-
-  // Get the last used entity slug for navigation
-  const getEntitySlug = (): string | null => {
-    return localStorage.getItem(LAST_ENTITY_KEY);
-  };
 
   // Map products to the format expected by AppPricingPage
   const products: PricingProduct[] = rawProducts.map((p) => ({
@@ -70,9 +62,8 @@ export function PricingPage() {
         if (result) {
           success(tSub("purchase.success", "Subscription activated successfully!"));
           // Navigate to dashboard after successful purchase
-          const entitySlug = getEntitySlug();
-          if (entitySlug) {
-            navigate(`/dashboard/${entitySlug}`);
+          if (currentEntitySlug) {
+            navigate(`/dashboard/${currentEntitySlug}`);
           } else {
             navigate("/dashboard");
           }
@@ -91,9 +82,8 @@ export function PricingPage() {
 
   const handleFreePlanClick = () => {
     if (isAuthenticated) {
-      const entitySlug = getEntitySlug();
-      if (entitySlug) {
-        navigate(`/dashboard/${entitySlug}`);
+      if (currentEntitySlug) {
+        navigate(`/dashboard/${currentEntitySlug}`);
       } else {
         navigate("/dashboard");
       }
@@ -192,7 +182,7 @@ export function PricingPage() {
         isAuthenticated={isAuthenticated}
         hasActiveSubscription={hasActiveSubscription}
         currentProductIdentifier={currentSubscription?.productIdentifier}
-        subscriptionUserId={entityId}
+        subscriptionUserId={currentEntityId ?? undefined}
         labels={labels}
         formatters={formatters}
         entitlementMap={PACKAGE_ENTITLEMENT_MAP}

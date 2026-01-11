@@ -1,8 +1,9 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { getFirebaseAuth } from '@sudobility/auth_lib';
-import { useAuth } from '../contexts/AuthContext';
-import { useEntity } from '../contexts/EntityContext';
+import { useAuthStatus } from '@sudobility/auth-components';
+import { useCurrentEntity } from '../hooks/useCurrentEntity';
+import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { EntitySelector } from '@sudobility/entity-components';
 
 const navItems = [
@@ -17,8 +18,9 @@ const navItems = [
 
 export default function Layout() {
   const location = useLocation();
-  const { user } = useAuth();
-  const { entities, currentEntity, setCurrentEntity } = useEntity();
+  const { navigate } = useLocalizedNavigate();
+  const { user } = useAuthStatus();
+  const { entities, currentEntity, selectEntity } = useCurrentEntity();
 
   const handleSignOut = async () => {
     const auth = getFirebaseAuth();
@@ -38,8 +40,11 @@ export default function Layout() {
                 <EntitySelector
                   entities={entities}
                   currentEntity={currentEntity}
-                  onSelect={setCurrentEntity}
-                  onCreateNew={() => window.location.href = '/workspaces'}
+                  onSelect={(entity) => {
+                    selectEntity(entity.entitySlug);
+                    navigate(`/dashboard/${entity.entitySlug}`);
+                  }}
+                  onCreateNew={() => navigate('/dashboard/workspaces')}
                 />
               </div>
               <div className="hidden sm:ml-8 sm:flex sm:space-x-4">

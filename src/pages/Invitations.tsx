@@ -4,16 +4,15 @@
  */
 
 import { InvitationsPage } from '@sudobility/entity_pages';
-import { useEntity } from '../contexts/EntityContext';
-import { useQueryClient } from '@tanstack/react-query';
+import { entityClient } from '../config/entityClient';
+import { useCurrentEntity } from '../hooks/useCurrentEntity';
 
 export default function Invitations() {
-  const { entityClient } = useEntity();
-  const queryClient = useQueryClient();
+  const { refresh } = useCurrentEntity();
 
   const handleInvitationAccepted = () => {
     // Refresh entities list after accepting an invitation
-    queryClient.invalidateQueries({ queryKey: ['entities'] });
+    refresh();
   };
 
   return (

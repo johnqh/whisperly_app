@@ -3,18 +3,19 @@
  * @description Page for listing and managing user's workspaces
  */
 
-import { useNavigate } from 'react-router-dom';
 import { EntityListPage } from '@sudobility/entity_pages';
-import { useEntity } from '../contexts/EntityContext';
+import { entityClient } from '../config/entityClient';
+import { useCurrentEntity } from '../hooks/useCurrentEntity';
+import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import type { EntityWithRole } from '@sudobility/entity_client';
 
 export default function Workspaces() {
-  const navigate = useNavigate();
-  const { entityClient, setCurrentEntity } = useEntity();
+  const { navigate } = useLocalizedNavigate();
+  const { selectEntity } = useCurrentEntity();
 
   const handleSelectEntity = (entity: EntityWithRole) => {
-    setCurrentEntity(entity);
-    navigate('/');
+    selectEntity(entity.entitySlug);
+    navigate(`/dashboard/${entity.entitySlug}`);
   };
 
   return (

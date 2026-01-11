@@ -22,7 +22,7 @@ const PACKAGE_ENTITLEMENT_MAP: Record<string, string> = {
 export default function Subscription() {
   const { t } = useTranslation("subscription");
   const { success } = useToast();
-  const { entityId } = useCurrentEntity();
+  const { currentEntityId } = useCurrentEntity();
   const subscriptionContext = useSubscriptionContext();
 
   const handlePurchaseSuccess = () => {
@@ -134,7 +134,7 @@ export default function Subscription() {
   return (
     <AppSubscriptionsPage
       subscription={subscriptionContext}
-      subscriptionUserId={entityId}
+      subscriptionUserId={currentEntityId ?? undefined}
       labels={labels}
       formatters={formatters}
       packageEntitlementMap={PACKAGE_ENTITLEMENT_MAP}
