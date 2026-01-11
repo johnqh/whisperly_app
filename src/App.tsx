@@ -28,6 +28,8 @@ import { HomePage } from "./pages/HomePage";
 import { PricingPage } from "./pages/PricingPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
 import { TermsPage } from "./pages/TermsPage";
+import { CookiesPage } from "./pages/CookiesPage";
+import { SitemapPage } from "./pages/SitemapPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import Login from "./pages/Login";
 
@@ -82,6 +84,8 @@ function AppRoutes() {
         <Route path="settings" element={<SettingsPage />} />
         <Route path="privacy" element={<PrivacyPage />} />
         <Route path="terms" element={<TermsPage />} />
+        <Route path="cookies" element={<CookiesPage />} />
+        <Route path="sitemap" element={<SitemapPage />} />
 
         {/* Protected Dashboard - redirect to entity */}
         <Route
