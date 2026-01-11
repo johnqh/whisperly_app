@@ -13,7 +13,9 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { ToastProvider } from "./context/ToastContext";
 import { AuthProviderWrapper } from "./components/providers/AuthProviderWrapper";
 import { ApiProvider } from "./context/ApiContext";
-import { CurrentEntityProvider } from "./context/CurrentEntityContext";
+import { CurrentEntityProvider } from "@sudobility/entity_client";
+import { useAuthStatus } from "@sudobility/auth-components";
+import { entityClient } from "./config/entityClient";
 import { SubscriptionProviderWrapper } from "./components/providers/SubscriptionProviderWrapper";
 import { useCurrentEntity } from "./hooks/useCurrentEntity";
 
@@ -55,6 +57,17 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+// Wrapper that connects CurrentEntityProvider to auth state
+function AuthAwareEntityProvider({ children }: { children: React.ReactNode }) {
+  const { user } = useAuthStatus();
+  const authUser = user ? { uid: user.uid, email: user.email } : null;
+  return (
+    <CurrentEntityProvider client={entityClient} user={authUser}>
+      {children}
+    </CurrentEntityProvider>
+  );
+}
 
 // Wrapper that reads entity ID from context and passes to subscription provider
 function EntityAwareSubscriptionProvider({
@@ -139,14 +152,14 @@ function App() {
               <ToastProvider>
                 <AuthProviderWrapper>
                   <ApiProvider>
-                    <CurrentEntityProvider>
+                    <AuthAwareEntityProvider>
                       <BrowserRouter>
                         <EntityAwareSubscriptionProvider>
                           <AppRoutes />
                           <InfoBanner />
                         </EntityAwareSubscriptionProvider>
                       </BrowserRouter>
-                    </CurrentEntityProvider>
+                    </AuthAwareEntityProvider>
                   </ApiProvider>
                 </AuthProviderWrapper>
               </ToastProvider>
