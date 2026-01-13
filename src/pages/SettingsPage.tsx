@@ -16,6 +16,7 @@ export function SettingsPage() {
         <title>{t("meta.title")} | {CONSTANTS.APP_NAME}</title>
       </Helmet>
 
+      {/* GlobalSettingsPage is a full-page master-detail layout */}
       <GlobalSettingsPage
         theme={theme}
         fontSize={fontSize}

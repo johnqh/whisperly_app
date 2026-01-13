@@ -7,4 +7,5 @@ export { LanguageValidator } from "./LanguageValidator";
 export { LocalizedLink } from "./LocalizedLink";
 export { ProtectedRoute } from "./ProtectedRoute";
 export { ScreenContainer } from "./ScreenContainer";
+export { Section } from "./Section";
 export { TopBar } from "./TopBar";

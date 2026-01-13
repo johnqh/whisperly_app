@@ -19,6 +19,38 @@ const PACKAGE_ENTITLEMENT_MAP: Record<string, string> = {
   starter_monthly: "whisperly_starter",
 };
 
+// Entitlement to level mapping for comparing tiers (higher = better)
+const ENTITLEMENT_LEVELS: Record<string, number> = {
+  whisperly_starter: 1,
+  whisperly_pro: 2,
+};
+
+// Features for each product tier
+const PRODUCT_FEATURES: Record<string, string[]> = {
+  starter_monthly: [
+    "10,000 translations/month",
+    "Up to 10 projects",
+    "Email support",
+  ],
+  starter_yearly: [
+    "10,000 translations/month",
+    "Up to 10 projects",
+    "Email support",
+  ],
+  pro_monthly: [
+    "Unlimited translations",
+    "Unlimited projects",
+    "Priority support",
+    "API access",
+  ],
+  pro_yearly: [
+    "Unlimited translations",
+    "Unlimited projects",
+    "Priority support",
+    "API access",
+  ],
+};
+
 export default function Subscription() {
   const { t } = useTranslation("subscription");
   const { success } = useToast();
@@ -127,6 +159,8 @@ export default function Subscription() {
         t("badges.savePercent", "Save {{percent}}%", { percent }),
       formatIntroNote: (price: string) =>
         t("intro.note", "Then {{price}}", { price }),
+      getProductFeatures: (productId: string) =>
+        PRODUCT_FEATURES[productId] ?? [],
     }),
     [t]
   );
@@ -137,7 +171,8 @@ export default function Subscription() {
       subscriptionUserId={currentEntityId ?? undefined}
       labels={labels}
       formatters={formatters}
-      packageEntitlementMap={PACKAGE_ENTITLEMENT_MAP}
+      entitlementMap={PACKAGE_ENTITLEMENT_MAP}
+      entitlementLevels={ENTITLEMENT_LEVELS}
       onPurchaseSuccess={handlePurchaseSuccess}
       onRestoreSuccess={handleRestoreSuccess}
       onError={handleError}

@@ -22,11 +22,15 @@ export function ScreenContainer({
   return (
     <LayoutProvider>
       <div className="flex min-h-screen flex-col">
-        <TopBar />
+        {/* Sticky header containing topbar and breadcrumbs */}
+        <div className="sticky top-0 z-40">
+          <TopBar />
+          {showBreadcrumbs && <BreadcrumbSection />}
+        </div>
 
-        {showBreadcrumbs && <BreadcrumbSection />}
-
-        <main className={`flex-1 ${className}`}>{children}</main>
+        <main className={`flex-1 ${className}`}>
+          {children}
+        </main>
 
         {showFooter && <Footer variant={compactFooter ? "compact" : "full"} />}
       </div>

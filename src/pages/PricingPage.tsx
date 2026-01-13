@@ -177,6 +177,7 @@ export function PricingPage() {
           )}
         />
       </Helmet>
+      {/* AppPricingPage manages its own layout with internal sections */}
       <AppPricingPage
         products={products}
         isAuthenticated={isAuthenticated}

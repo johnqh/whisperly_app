@@ -5,6 +5,7 @@ import {
 } from '@sudobility/ratelimit_pages';
 import { useApi } from '../contexts/ApiContext';
 import { useNavigate } from 'react-router-dom';
+import { Section } from '../components/layout/Section';
 
 type TabType = 'limits' | 'history';
 
@@ -14,39 +15,41 @@ export default function RateLimits() {
   const [activeTab, setActiveTab] = useState<TabType>('limits');
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Rate Limits</h1>
-        <p className="mt-1 text-sm text-gray-500">
+    <>
+      <Section spacing="lg">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Rate Limits</h1>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
           View your API usage and rate limits
         </p>
-      </div>
+      </Section>
 
-      {/* Tab Navigation */}
-      <div className="border-b border-gray-200">
-        <nav className="-mb-px flex gap-6">
-          <button
-            onClick={() => setActiveTab('limits')}
-            className={`py-3 text-sm font-medium transition-colors ${
-              activeTab === 'limits'
-                ? 'border-b-2 border-primary-500 text-primary-600'
-                : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            Current Limits
-          </button>
-          <button
-            onClick={() => setActiveTab('history')}
-            className={`py-3 text-sm font-medium transition-colors ${
-              activeTab === 'history'
-                ? 'border-b-2 border-primary-500 text-primary-600'
-                : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            Usage History
-          </button>
-        </nav>
-      </div>
+      <Section spacing="lg">
+        {/* Tab Navigation */}
+        <div className="border-b border-gray-200 dark:border-gray-700">
+          <nav className="-mb-px flex gap-6">
+            <button
+              onClick={() => setActiveTab('limits')}
+              className={`py-3 text-sm font-medium transition-colors ${
+                activeTab === 'limits'
+                  ? 'border-b-2 border-primary-500 text-primary-600'
+                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+              }`}
+            >
+              Current Limits
+            </button>
+            <button
+              onClick={() => setActiveTab('history')}
+              className={`py-3 text-sm font-medium transition-colors ${
+                activeTab === 'history'
+                  ? 'border-b-2 border-primary-500 text-primary-600'
+                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+              }`}
+            >
+              Usage History
+            </button>
+          </nav>
+        </div>
+      </Section>
 
       {/* Tab Content */}
       {activeTab === 'limits' && (
@@ -98,6 +101,6 @@ export default function RateLimits() {
           }}
         />
       )}
-    </div>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
 import { ScreenContainer } from "../components/layout/ScreenContainer";
+import { Section } from "../components/layout/Section";
 import { CONSTANTS } from "../config/constants";
 import { AppTextPage } from "@sudobility/building_blocks";
 import type { TextPageContent } from "@sudobility/building_blocks";
@@ -79,10 +80,12 @@ export function TermsPage() {
         <meta name="description" content={t("meta.description")} />
       </Helmet>
 
-      <AppTextPage
-        text={text}
-        lastUpdatedDate={new Date().toLocaleDateString()}
-      />
+      <Section spacing="3xl">
+        <AppTextPage
+          text={text}
+          lastUpdatedDate={new Date().toLocaleDateString()}
+        />
+      </Section>
     </ScreenContainer>
   );
 }

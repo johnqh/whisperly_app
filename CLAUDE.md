@@ -156,11 +156,37 @@ function MyComponent() {
 ```
 
 ### Using Managers (from whisperly_lib)
+Managers follow entity-centric patterns and require scope parameters:
+
+**Entity-scoped managers** (projects, analytics, glossaries):
 ```tsx
-import { useProjectManager } from '@sudobility/whisperly_lib';
+import { useProjectManager, useAnalyticsManager } from '@sudobility/whisperly_lib';
+import { useWhisperly } from '../contexts/WhisperlyContext';
+import { useEntity } from '../contexts/EntityContext';
 
 function Projects() {
-  const { projects, isLoading, createProject } = useProjectManager();
+  const client = useWhisperly();
+  const { currentEntity } = useEntity();
+  const entitySlug = currentEntity?.entitySlug ?? '';
+
+  const { projects, isLoading, createProject } = useProjectManager(client, entitySlug);
+  const { aggregate, byProject } = useAnalyticsManager(client, entitySlug, options);
+}
+```
+
+**User-scoped managers** (settings, subscription):
+```tsx
+import { useSettingsManager, useSubscriptionManager } from '@sudobility/whisperly_lib';
+import { useWhisperly } from '../contexts/WhisperlyContext';
+import { useAuth } from '../contexts/AuthContext';
+
+function Settings() {
+  const client = useWhisperly();
+  const { user } = useAuth();
+  const userId = user?.uid ?? '';
+
+  const { settings, updateSettings } = useSettingsManager(client, userId);
+  const { subscription, tier } = useSubscriptionManager(client, userId);
 }
 ```
 

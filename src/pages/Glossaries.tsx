@@ -6,13 +6,17 @@ import {
 } from '@sudobility/whisperly_lib';
 import type { GlossaryCreateRequest } from '@sudobility/whisperly_types';
 import { useWhisperly } from '../contexts/WhisperlyContext';
+import { useEntity } from '../contexts/EntityContext';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
+import { Section } from '../components/layout/Section';
 
 export default function Glossaries() {
   const { projectId } = useParams<{ projectId: string }>();
   const client = useWhisperly();
-  const { project } = useProjectDetail(client, projectId!);
+  const { currentEntity, isLoading: entityLoading } = useEntity();
+  const entitySlug = currentEntity?.entitySlug ?? '';
+  const { project } = useProjectDetail(client, entitySlug, projectId!);
   const {
     glossaries,
     isLoading,
@@ -20,7 +24,7 @@ export default function Glossaries() {
     deleteGlossary,
     isCreating,
     isDeleting,
-  } = useGlossaryManager(client, projectId!);
+  } = useGlossaryManager(client, entitySlug, projectId!);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newGlossary, setNewGlossary] = useState<GlossaryCreateRequest>({
@@ -63,99 +67,103 @@ export default function Glossaries() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || entityLoading || !currentEntity) {
     return <Loading />;
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-start">
-        <div>
-          <div className="flex items-center space-x-3">
-            <Link
-              to={`/projects/${projectId}`}
-              className="text-gray-400 hover:text-gray-500"
-            >
-              &larr;
-            </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Glossaries</h1>
+    <>
+      <Section spacing="lg">
+        <div className="flex justify-between items-start">
+          <div>
+            <div className="flex items-center space-x-3">
+              <Link
+                to={`/projects/${projectId}`}
+                className="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400"
+              >
+                &larr;
+              </Link>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Glossaries</h1>
+            </div>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              {project?.display_name || 'Loading...'}
+            </p>
           </div>
-          <p className="mt-1 text-sm text-gray-500">
-            {project?.display_name || 'Loading...'}
-          </p>
+          <Button onClick={() => setShowCreateModal(true)}>Add Term</Button>
         </div>
-        <Button onClick={() => setShowCreateModal(true)}>Add Term</Button>
-      </div>
+      </Section>
 
-      <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Term
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Translations
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Context
-              </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {glossaries.map(glossary => (
-              <tr key={glossary.id}>
-                <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-                  {glossary.term}
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex flex-wrap gap-1">
-                    {Object.entries(glossary.translations).map(([lang, value]) => (
-                      <span
-                        key={lang}
-                        className="px-2 py-1 text-xs bg-gray-100 rounded"
-                      >
-                        <span className="font-medium">{lang}:</span> {value}
-                      </span>
-                    ))}
-                  </div>
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
-                  {glossary.context || '-'}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                  <button
-                    onClick={() => handleDelete(glossary.id)}
-                    className="text-red-600 hover:text-red-500"
-                    disabled={isDeleting}
-                  >
-                    Delete
-                  </button>
-                </td>
+      <Section spacing="lg">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-gray-900">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Term
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Translations
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Context
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {glossaries.length === 0 && (
-          <div className="px-6 py-12 text-center text-gray-500">
-            No glossary entries yet. Add terms to help the translation AI
-            maintain consistency.
-          </div>
-        )}
-      </div>
+            </thead>
+            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              {glossaries.map(glossary => (
+                <tr key={glossary.id}>
+                  <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-gray-100">
+                    {glossary.term}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-wrap gap-1">
+                      {Object.entries(glossary.translations).map(([lang, value]) => (
+                        <span
+                          key={lang}
+                          className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded"
+                        >
+                          <span className="font-medium">{lang}:</span> {value}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">
+                    {glossary.context || '-'}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                    <button
+                      onClick={() => handleDelete(glossary.id)}
+                      className="text-red-600 hover:text-red-500"
+                      disabled={isDeleting}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {glossaries.length === 0 && (
+            <div className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+              No glossary entries yet. Add terms to help the translation AI
+              maintain consistency.
+            </div>
+          )}
+        </div>
+      </Section>
 
       {showCreateModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-lg w-full mx-4">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-lg w-full mx-4">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
               Add Glossary Term
             </h2>
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Term
                 </label>
                 <input
@@ -165,21 +173,21 @@ export default function Glossaries() {
                   onChange={e =>
                     setNewGlossary({ ...newGlossary, term: e.target.value })
                   }
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Translations
                 </label>
                 <div className="mt-2 space-y-2">
                   {Object.entries(newGlossary.translations).map(([lang, value]) => (
                     <div
                       key={lang}
-                      className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded"
+                      className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 px-3 py-2 rounded"
                     >
-                      <span>
+                      <span className="text-gray-900 dark:text-gray-100">
                         <span className="font-medium">{lang}:</span> {value}
                       </span>
                       <button
@@ -198,14 +206,14 @@ export default function Glossaries() {
                     placeholder="Language (e.g., ja)"
                     value={newTranslationLang}
                     onChange={e => setNewTranslationLang(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   />
                   <input
                     type="text"
                     placeholder="Translation"
                     value={newTranslationValue}
                     onChange={e => setNewTranslationValue(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   />
                   <Button
                     type="button"
@@ -218,7 +226,7 @@ export default function Glossaries() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Context (optional)
                 </label>
                 <textarea
@@ -231,7 +239,7 @@ export default function Glossaries() {
                   }
                   rows={2}
                   placeholder="Provide context for how this term should be used..."
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 />
               </div>
 
@@ -258,6 +266,6 @@ export default function Glossaries() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
