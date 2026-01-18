@@ -9,21 +9,6 @@ import {
 import { getInfoService } from "@sudobility/di";
 import { InfoType } from "@sudobility/types";
 import { useToast } from "../hooks/useToast";
-import { useCurrentEntity } from "../hooks/useCurrentEntity";
-
-// Package ID to entitlement mapping (from RevenueCat configuration)
-const PACKAGE_ENTITLEMENT_MAP: Record<string, string> = {
-  pro_yearly: "whisperly_pro",
-  pro_monthly: "whisperly_pro",
-  starter_yearly: "whisperly_starter",
-  starter_monthly: "whisperly_starter",
-};
-
-// Entitlement to level mapping for comparing tiers (higher = better)
-const ENTITLEMENT_LEVELS: Record<string, number> = {
-  whisperly_starter: 1,
-  whisperly_pro: 2,
-};
 
 // Features for each product tier
 const PRODUCT_FEATURES: Record<string, string[]> = {
@@ -54,7 +39,6 @@ const PRODUCT_FEATURES: Record<string, string[]> = {
 export default function Subscription() {
   const { t } = useTranslation("subscription");
   const { success } = useToast();
-  const { currentEntityId } = useCurrentEntity();
   const subscriptionContext = useSubscriptionContext();
 
   const handlePurchaseSuccess = () => {
@@ -117,6 +101,8 @@ export default function Subscription() {
       buttonPurchasing: t("buttons.purchasing", "Processing..."),
       buttonRestore: t("buttons.restore", "Restore Purchases"),
       buttonRestoring: t("buttons.restoring", "Restoring..."),
+      buttonUpgrade: t("buttons.upgrade", "Upgrade"),
+      buttonUpgrading: t("buttons.upgrading", "Upgrading..."),
 
       // Empty states
       noProducts: t("noProducts", "No subscription products available"),
@@ -165,14 +151,31 @@ export default function Subscription() {
     [t]
   );
 
+  const handlePurchase = async (packageId: string): Promise<boolean> => {
+    try {
+      const result = await subscriptionContext.purchase(packageId);
+      return !!result;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleRestore = async (): Promise<boolean> => {
+    try {
+      const result = await subscriptionContext.restore();
+      return !!result;
+    } catch {
+      return false;
+    }
+  };
+
   return (
     <AppSubscriptionsPage
-      subscription={subscriptionContext}
-      subscriptionUserId={currentEntityId ?? undefined}
+      offerId="default"
       labels={labels}
       formatters={formatters}
-      entitlementMap={PACKAGE_ENTITLEMENT_MAP}
-      entitlementLevels={ENTITLEMENT_LEVELS}
+      onPurchase={handlePurchase}
+      onRestore={handleRestore}
       onPurchaseSuccess={handlePurchaseSuccess}
       onRestoreSuccess={handleRestoreSuccess}
       onError={handleError}

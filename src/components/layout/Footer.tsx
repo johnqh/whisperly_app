@@ -7,6 +7,7 @@ import {
 import { SystemStatusIndicator, useNetwork } from "@sudobility/devops-components";
 import { CONSTANTS } from "../../config/constants";
 import LocalizedLink from "./LocalizedLink";
+import { useBuildingBlocksAnalytics } from "../../hooks/useBuildingBlocksAnalytics";
 
 interface FooterProps {
   variant?: "full" | "compact";
@@ -31,6 +32,7 @@ export function Footer({ variant = "full" }: FooterProps) {
   const { t } = useTranslation("common");
   const currentYear = String(new Date().getFullYear());
   const { isOnline } = useNetwork();
+  const onTrack = useBuildingBlocksAnalytics();
 
   if (variant === "compact") {
     return (
@@ -55,6 +57,7 @@ export function Footer({ variant = "full" }: FooterProps) {
         ]}
         LinkComponent={LinkWrapper}
         isNetworkOnline={isOnline}
+        onTrack={onTrack}
         sticky
       />
     );
@@ -109,6 +112,7 @@ export function Footer({ variant = "full" }: FooterProps) {
       description={t("footer.description")}
       LinkComponent={LinkWrapper}
       isNetworkOnline={isOnline}
+      onTrack={onTrack}
       gridColumns={3}
     />
   );

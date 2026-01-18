@@ -118,7 +118,7 @@ src/
     "react-i18next": "^15.x.x",
     "i18next-browser-languagedetector": "^8.x.x",
     "react-helmet-async": "^2.x.x",
-    "lucide-react": "^0.5xx.x"
+    "@heroicons/react": "^2.2.0"
   }
 }
 ```

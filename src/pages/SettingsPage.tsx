@@ -5,10 +5,12 @@ import { useTheme } from "../context/ThemeContext";
 import { CONSTANTS } from "../config/constants";
 import { GlobalSettingsPage } from "@sudobility/building_blocks";
 import { Theme, FontSize } from "@sudobility/types";
+import { useBuildingBlocksAnalytics } from "../hooks/useBuildingBlocksAnalytics";
 
 export function SettingsPage() {
   const { t } = useTranslation("settings");
   const { theme, setTheme, fontSize, setFontSize } = useTheme();
+  const onTrack = useBuildingBlocksAnalytics();
 
   return (
     <ScreenContainer>
@@ -25,6 +27,7 @@ export function SettingsPage() {
         t={(key, fallback) => t(key, { defaultValue: fallback })}
         appearanceT={(key, fallback) => t(`appearance.${key}`, { defaultValue: fallback })}
         showAppearanceInfoBox={true}
+        onTrack={onTrack}
       />
     </ScreenContainer>
   );

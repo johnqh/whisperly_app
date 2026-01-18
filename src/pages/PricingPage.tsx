@@ -5,75 +5,39 @@ import {
   AppPricingPage,
   type PricingPageLabels,
   type PricingPageFormatters,
-  type PricingProduct,
   type FAQItem,
-  type EntitlementMap,
-  type EntitlementLevels,
 } from "@sudobility/building_blocks";
-import { useSafeSubscriptionContext } from "../components/providers/SafeSubscriptionContext";
 import { useCurrentEntity } from "../hooks/useCurrentEntity";
 import { ScreenContainer } from "../components/layout/ScreenContainer";
 import { useLocalizedNavigate } from "../hooks/useLocalizedNavigate";
-import { useToast } from "../hooks/useToast";
 import { CONSTANTS } from "../config/constants";
+import { useBuildingBlocksAnalytics } from "../hooks/useBuildingBlocksAnalytics";
 
 // Package ID to entitlement mapping (from RevenueCat configuration)
-const PACKAGE_ENTITLEMENT_MAP: EntitlementMap = {
+const PACKAGE_ENTITLEMENT_MAP: Record<string, string> = {
   pro_yearly: "whisperly_pro",
   pro_monthly: "whisperly_pro",
   starter_yearly: "whisperly_starter",
   starter_monthly: "whisperly_starter",
 };
 
-// Entitlement to level mapping (higher = better tier)
-const ENTITLEMENT_LEVELS: EntitlementLevels = {
-  none: 0,
-  whisperly_starter: 1,
-  whisperly_pro: 2,
-};
-
 export function PricingPage() {
   const { t } = useTranslation("pricing");
   const { t: tSub } = useTranslation("subscription");
   const { user, openModal } = useAuthStatus();
-  const { products: rawProducts, currentSubscription, purchase } =
-    useSafeSubscriptionContext();
-  const { currentEntityId, currentEntitySlug } = useCurrentEntity();
+  const { currentEntitySlug } = useCurrentEntity();
   const { navigate } = useLocalizedNavigate();
-  const { success, error: showError } = useToast();
+  const onTrack = useBuildingBlocksAnalytics();
 
   const isAuthenticated = !!user;
-  const hasActiveSubscription = currentSubscription?.isActive ?? false;
 
-  // Map products to the format expected by AppPricingPage
-  const products: PricingProduct[] = rawProducts.map((p) => ({
-    identifier: p.identifier,
-    title: p.title,
-    price: p.price,
-    priceString: p.priceString,
-    period: p.period,
-  }));
-
-  const handlePlanClick = async (planIdentifier: string) => {
+  const handlePlanClick = async (_planIdentifier: string) => {
     if (isAuthenticated) {
-      // Directly initiate purchase flow
-      try {
-        const result = await purchase(planIdentifier);
-        if (result) {
-          success(tSub("purchase.success", "Subscription activated successfully!"));
-          // Navigate to dashboard after successful purchase
-          if (currentEntitySlug) {
-            navigate(`/dashboard/${currentEntitySlug}`);
-          } else {
-            navigate("/dashboard");
-          }
-        }
-      } catch (err) {
-        showError(
-          err instanceof Error
-            ? err.message
-            : tSub("purchase.error", "Failed to complete purchase")
-        );
+      // Navigate to subscription page for purchase flow
+      if (currentEntitySlug) {
+        navigate(`/dashboard/${currentEntitySlug}/subscription`);
+      } else {
+        navigate("/dashboard");
       }
     } else {
       openModal();
@@ -179,18 +143,14 @@ export function PricingPage() {
       </Helmet>
       {/* AppPricingPage manages its own layout with internal sections */}
       <AppPricingPage
-        products={products}
         isAuthenticated={isAuthenticated}
-        hasActiveSubscription={hasActiveSubscription}
-        currentProductIdentifier={currentSubscription?.productIdentifier}
-        subscriptionUserId={currentEntityId ?? undefined}
         labels={labels}
         formatters={formatters}
-        entitlementMap={PACKAGE_ENTITLEMENT_MAP}
-        entitlementLevels={ENTITLEMENT_LEVELS}
         onPlanClick={handlePlanClick}
         onFreePlanClick={handleFreePlanClick}
         faqItems={faqItems.length > 0 ? faqItems : undefined}
+        onTrack={onTrack}
+        offerId="default"
       />
     </ScreenContainer>
   );

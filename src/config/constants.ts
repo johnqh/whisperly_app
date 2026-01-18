@@ -11,14 +11,13 @@ export const CONSTANTS = {
 
   // API
   API_URL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3001",
-  DEV_MODE: import.meta.env.VITE_DEV_MODE === "true",
 
   // Testnet/Sandbox Mode
-  TESTNET_ONLY: import.meta.env.VITE_TESTNET_ONLY === "true",
+  DEV_MODE: import.meta.env.VITE_DEV_MODE === "true",
 
   // RevenueCat API key (selects sandbox when testnet mode enabled)
   REVENUECAT_API_KEY:
-    import.meta.env.VITE_TESTNET_ONLY === "true"
+    import.meta.env.VITE_DEV_MODE === "true"
       ? import.meta.env.VITE_REVENUECAT_API_KEY_SANDBOX || ""
       : import.meta.env.VITE_REVENUECAT_API_KEY || "",
 
@@ -43,6 +42,8 @@ export const CONSTANTS = {
   STATUS_PAGE_URL: import.meta.env.VITE_STATUS_PAGE_URL || "",
   STATUS_PAGE_API_URL: import.meta.env.VITE_STATUS_PAGE_API_URL || "",
 
+  // Meet with Founder
+  MEET_FOUNDER_URL: import.meta.env.VITE_MEET_FOUNDER_URL || undefined,
 } as const;
 
 // Navigation items

@@ -1,5 +1,7 @@
-import { BreadcrumbSection as SharedBreadcrumbSection } from "@sudobility/components";
+import { useTranslation } from "react-i18next";
+import { AppBreadcrumbs } from "@sudobility/building_blocks";
 import { useBreadcrumbs } from "../../hooks/useBreadcrumbs";
+import { CONSTANTS } from "../../config/constants";
 
 interface BreadcrumbSectionProps {
   shareConfig?: {
@@ -11,6 +13,7 @@ interface BreadcrumbSectionProps {
 }
 
 export function BreadcrumbSection({ shareConfig }: BreadcrumbSectionProps) {
+  const { t } = useTranslation("common");
   const breadcrumbs = useBreadcrumbs();
 
   if (breadcrumbs.length <= 1) {
@@ -18,9 +21,17 @@ export function BreadcrumbSection({ shareConfig }: BreadcrumbSectionProps) {
   }
 
   return (
-    <SharedBreadcrumbSection
+    <AppBreadcrumbs
       items={breadcrumbs}
       shareConfig={shareConfig}
+      talkToFounder={
+        CONSTANTS.MEET_FOUNDER_URL
+          ? {
+              meetingUrl: CONSTANTS.MEET_FOUNDER_URL,
+              buttonText: t("common.talkToFounder"),
+            }
+          : undefined
+      }
     />
   );
 }
