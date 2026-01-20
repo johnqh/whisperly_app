@@ -21,6 +21,9 @@ export default function ProjectDetail() {
     project_name: undefined,
     description: undefined,
     instructions: undefined,
+    default_source_language: undefined,
+    default_target_languages: undefined,
+    ip_allowlist: undefined,
     is_active: undefined,
   });
 
@@ -34,6 +37,9 @@ export default function ProjectDetail() {
       project_name: project.project_name,
       description: project.description ?? undefined,
       instructions: project.instructions ?? undefined,
+      default_source_language: project.default_source_language ?? undefined,
+      default_target_languages: project.default_target_languages ?? undefined,
+      ip_allowlist: project.ip_allowlist ?? undefined,
       is_active: project.is_active ?? true,
     });
     setIsEditing(true);

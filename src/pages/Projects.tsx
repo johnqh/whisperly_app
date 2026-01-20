@@ -27,6 +27,9 @@ export default function Projects() {
     display_name: '',
     description: undefined,
     instructions: undefined,
+    default_source_language: undefined,
+    default_target_languages: undefined,
+    ip_allowlist: undefined,
   });
 
   const handleCreate = async (e: React.FormEvent) => {
@@ -38,6 +41,9 @@ export default function Projects() {
       display_name: '',
       description: undefined,
       instructions: undefined,
+      default_source_language: undefined,
+      default_target_languages: undefined,
+      ip_allowlist: undefined,
     });
   };
 

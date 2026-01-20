@@ -1,16 +1,12 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import type { ReactNode } from "react";
+import { networkClient } from "@sudobility/di";
 import { getInfoService } from "@sudobility/di";
 import { InfoType } from "@sudobility/types";
 import { useAuthStatus } from "@sudobility/auth-components";
-import {
-  getFirebaseAuth,
-  useFirebaseAuthNetworkClient,
-} from "@sudobility/auth_lib";
+import { getFirebaseAuth } from "@sudobility/auth_lib";
 import { CONSTANTS } from "../config/constants";
 import { ApiContext, type ApiContextValue } from "./apiContextDef";
-
-export { ApiContext, type ApiContextValue } from "./apiContextDef";
 
 interface ApiProviderProps {
   children: ReactNode;
@@ -20,7 +16,6 @@ export function ApiProvider({ children }: ApiProviderProps) {
   const { user, loading: authLoading } = useAuthStatus();
   const [token, setToken] = useState<string | null>(null);
   const [tokenLoading, setTokenLoading] = useState(false);
-  const resilientNetworkClient = useFirebaseAuthNetworkClient();
   const auth = getFirebaseAuth();
 
   const baseUrl = CONSTANTS.API_URL;
@@ -95,7 +90,7 @@ export function ApiProvider({ children }: ApiProviderProps) {
 
   const value = useMemo<ApiContextValue>(
     () => ({
-      networkClient: resilientNetworkClient,
+      networkClient,
       baseUrl,
       userId,
       token,
@@ -105,7 +100,6 @@ export function ApiProvider({ children }: ApiProviderProps) {
       refreshToken,
     }),
     [
-      resilientNetworkClient,
       baseUrl,
       userId,
       token,

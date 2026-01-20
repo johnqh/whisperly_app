@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
-  useGlossaryManager,
+  useDictionaryManager,
   useProjectDetail,
 } from '@sudobility/whisperly_lib';
-import type { GlossaryCreateRequest } from '@sudobility/whisperly_types';
+import type { DictionaryCreateRequest, DictionarySearchResponse } from '@sudobility/whisperly_types';
 import { useWhisperly } from '../contexts/WhisperlyContext';
 import { useEntity } from '../contexts/EntityContext';
 import Button from '../components/Button';
@@ -18,31 +18,24 @@ export default function Glossaries() {
   const entitySlug = currentEntity?.entitySlug ?? '';
   const { project } = useProjectDetail(client, entitySlug, projectId!);
   const {
-    glossaries,
+    dictionaries,
     isLoading,
-    createGlossary,
-    deleteGlossary,
+    createDictionary,
+    deleteDictionary,
     isCreating,
     isDeleting,
-  } = useGlossaryManager(client, entitySlug, projectId!);
+  } = useDictionaryManager(client, entitySlug, projectId!);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [newGlossary, setNewGlossary] = useState<GlossaryCreateRequest>({
-    term: '',
-    translations: {},
-    context: undefined,
-  });
+  const [newDictionary, setNewDictionary] = useState<DictionaryCreateRequest>({});
   const [newTranslationLang, setNewTranslationLang] = useState('');
   const [newTranslationValue, setNewTranslationValue] = useState('');
 
   const handleAddTranslation = () => {
     if (newTranslationLang && newTranslationValue) {
-      setNewGlossary({
-        ...newGlossary,
-        translations: {
-          ...newGlossary.translations,
-          [newTranslationLang]: newTranslationValue,
-        },
+      setNewDictionary({
+        ...newDictionary,
+        [newTranslationLang]: newTranslationValue,
       });
       setNewTranslationLang('');
       setNewTranslationValue('');
@@ -50,20 +43,20 @@ export default function Glossaries() {
   };
 
   const handleRemoveTranslation = (lang: string) => {
-    const { [lang]: _, ...rest } = newGlossary.translations;
-    setNewGlossary({ ...newGlossary, translations: rest });
+    const { [lang]: _, ...rest } = newDictionary;
+    setNewDictionary(rest);
   };
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createGlossary(newGlossary);
+    await createDictionary(newDictionary);
     setShowCreateModal(false);
-    setNewGlossary({ term: '', translations: {}, context: undefined });
+    setNewDictionary({});
   };
 
-  const handleDelete = async (glossaryId: string) => {
-    if (confirm('Are you sure you want to delete this glossary entry?')) {
-      await deleteGlossary(glossaryId);
+  const handleDelete = async (dictionaryId: string) => {
+    if (confirm('Are you sure you want to delete this dictionary entry?')) {
+      await deleteDictionary(dictionaryId);
     }
   };
 
@@ -83,13 +76,13 @@ export default function Glossaries() {
               >
                 &larr;
               </Link>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Glossaries</h1>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Dictionary</h1>
             </div>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               {project?.display_name || 'Loading...'}
             </p>
           </div>
-          <Button onClick={() => setShowCreateModal(true)}>Add Term</Button>
+          <Button onClick={() => setShowCreateModal(true)}>Add Entry</Button>
         </div>
       </Section>
 
@@ -99,13 +92,10 @@ export default function Glossaries() {
             <thead className="bg-gray-50 dark:bg-gray-900">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Term
+                  ID
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Translations
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Context
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Actions
@@ -113,14 +103,14 @@ export default function Glossaries() {
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {glossaries.map(glossary => (
-                <tr key={glossary.id}>
+              {dictionaries.map((dictionary: DictionarySearchResponse) => (
+                <tr key={dictionary.dictionary_id}>
                   <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-gray-100">
-                    {glossary.term}
+                    {dictionary.dictionary_id.slice(0, 8)}...
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-wrap gap-1">
-                      {Object.entries(glossary.translations).map(([lang, value]) => (
+                      {Object.entries(dictionary.translations).map(([lang, value]) => (
                         <span
                           key={lang}
                           className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded"
@@ -130,12 +120,9 @@ export default function Glossaries() {
                       ))}
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">
-                    {glossary.context || '-'}
-                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                     <button
-                      onClick={() => handleDelete(glossary.id)}
+                      onClick={() => handleDelete(dictionary.dictionary_id)}
                       className="text-red-600 hover:text-red-500"
                       disabled={isDeleting}
                     >
@@ -146,9 +133,9 @@ export default function Glossaries() {
               ))}
             </tbody>
           </table>
-          {glossaries.length === 0 && (
+          {dictionaries.length === 0 && (
             <div className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
-              No glossary entries yet. Add terms to help the translation AI
+              No dictionary entries yet. Add entries to help the translation AI
               maintain consistency.
             </div>
           )}
@@ -159,30 +146,15 @@ export default function Glossaries() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-lg w-full mx-4">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-              Add Glossary Term
+              Add Dictionary Entry
             </h2>
             <form onSubmit={handleCreate} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Term
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={newGlossary.term}
-                  onChange={e =>
-                    setNewGlossary({ ...newGlossary, term: e.target.value })
-                  }
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                />
-              </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Translations
                 </label>
                 <div className="mt-2 space-y-2">
-                  {Object.entries(newGlossary.translations).map(([lang, value]) => (
+                  {Object.entries(newDictionary).map(([lang, value]) => (
                     <div
                       key={lang}
                       className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 px-3 py-2 rounded"
@@ -225,24 +197,6 @@ export default function Glossaries() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Context (optional)
-                </label>
-                <textarea
-                  value={newGlossary.context ?? ''}
-                  onChange={e =>
-                    setNewGlossary({
-                      ...newGlossary,
-                      context: e.target.value || undefined,
-                    })
-                  }
-                  rows={2}
-                  placeholder="Provide context for how this term should be used..."
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                />
-              </div>
-
               <div className="flex justify-end space-x-3 pt-4">
                 <Button
                   type="button"
@@ -254,12 +208,9 @@ export default function Glossaries() {
                 <Button
                   type="submit"
                   isLoading={isCreating}
-                  disabled={
-                    !newGlossary.term ||
-                    Object.keys(newGlossary.translations).length === 0
-                  }
+                  disabled={Object.keys(newDictionary).length === 0}
                 >
-                  Add Term
+                  Add Entry
                 </Button>
               </div>
             </form>
