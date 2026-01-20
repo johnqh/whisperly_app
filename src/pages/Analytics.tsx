@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { useAnalyticsManager, useProjectManager } from '@sudobility/whisperly_lib';
-import { useWhisperly } from '../contexts/WhisperlyContext';
+import { useApi } from '../contexts/ApiContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useEntity } from '../contexts/EntityContext';
 import Loading from '../components/Loading';
 import { Section } from '../components/layout/Section';
 
 export default function Analytics() {
-  const client = useWhisperly();
+  const { baseUrl } = useApi();
+  const { getIdToken } = useAuth();
   const { currentEntity, isLoading: entityLoading } = useEntity();
   const entitySlug = currentEntity?.entitySlug ?? '';
-  const { projects } = useProjectManager(client, entitySlug);
+  const { projects } = useProjectManager({ baseUrl, getIdToken, entitySlug });
   const [selectedProjectId, setSelectedProjectId] = useState<string | undefined>(
     undefined
   );
@@ -19,7 +21,10 @@ export default function Analytics() {
   }>({});
 
   const { aggregate, byProject, byDate, isLoading } =
-    useAnalyticsManager(client, entitySlug, {
+    useAnalyticsManager({
+      baseUrl,
+      getIdToken,
+      entitySlug,
       projectId: selectedProjectId,
       startDate: dateRange.start,
       endDate: dateRange.end,

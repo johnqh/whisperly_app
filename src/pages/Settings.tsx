@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { useSettingsManager } from '@sudobility/whisperly_lib';
-import { useWhisperly } from '../contexts/WhisperlyContext';
+import { useApi } from '../contexts/ApiContext';
 import { useAuth } from '../contexts/AuthContext';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
 import { Section } from '../components/layout/Section';
 
 export default function Settings() {
-  const client = useWhisperly();
-  const { user, loading: authLoading } = useAuth();
+  const { baseUrl } = useApi();
+  const { user, loading: authLoading, getIdToken } = useAuth();
   const userId = user?.uid ?? '';
   const { settings, isLoading, updateSettings, isUpdating } =
-    useSettingsManager(client, userId);
+    useSettingsManager({ baseUrl, getIdToken, userId });
 
   const [isEditing, setIsEditing] = useState(false);
   const [orgName, setOrgName] = useState('');

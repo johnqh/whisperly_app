@@ -2,14 +2,16 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useProjectManager } from '@sudobility/whisperly_lib';
 import type { ProjectCreateRequest } from '@sudobility/whisperly_types';
-import { useWhisperly } from '../contexts/WhisperlyContext';
+import { useApi } from '../contexts/ApiContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useEntity } from '../contexts/EntityContext';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
 import { Section } from '../components/layout/Section';
 
 export default function Projects() {
-  const client = useWhisperly();
+  const { baseUrl } = useApi();
+  const { getIdToken } = useAuth();
   const { currentEntity, isLoading: entityLoading } = useEntity();
   const entitySlug = currentEntity?.entitySlug ?? '';
   const {
@@ -19,7 +21,7 @@ export default function Projects() {
     deleteProject,
     isCreating,
     isDeleting,
-  } = useProjectManager(client, entitySlug);
+  } = useProjectManager({ baseUrl, getIdToken, entitySlug });
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newProject, setNewProject] = useState<ProjectCreateRequest>({

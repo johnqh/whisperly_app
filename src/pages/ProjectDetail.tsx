@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useProjectDetail, useProjectManager } from '@sudobility/whisperly_lib';
 import type { ProjectUpdateRequest } from '@sudobility/whisperly_types';
-import { useWhisperly } from '../contexts/WhisperlyContext';
+import { useApi } from '../contexts/ApiContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useEntity } from '../contexts/EntityContext';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
@@ -10,11 +11,12 @@ import { Section } from '../components/layout/Section';
 
 export default function ProjectDetail() {
   const { projectId } = useParams<{ projectId: string }>();
-  const client = useWhisperly();
+  const { baseUrl } = useApi();
+  const { getIdToken } = useAuth();
   const { currentEntity, isLoading: entityLoading } = useEntity();
   const entitySlug = currentEntity?.entitySlug ?? '';
-  const { project, isLoading, refetch } = useProjectDetail(client, entitySlug, projectId!);
-  const { updateProject, isUpdating } = useProjectManager(client, entitySlug);
+  const { project, isLoading, refetch } = useProjectDetail({ baseUrl, getIdToken, entitySlug, projectId: projectId! });
+  const { updateProject, isUpdating } = useProjectManager({ baseUrl, getIdToken, entitySlug });
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState<ProjectUpdateRequest>({
     display_name: undefined,

@@ -5,7 +5,8 @@ import {
   useProjectDetail,
 } from '@sudobility/whisperly_lib';
 import type { DictionaryCreateRequest, DictionarySearchResponse } from '@sudobility/whisperly_types';
-import { useWhisperly } from '../contexts/WhisperlyContext';
+import { useApi } from '../contexts/ApiContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useEntity } from '../contexts/EntityContext';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
@@ -13,10 +14,11 @@ import { Section } from '../components/layout/Section';
 
 export default function Dictionary() {
   const { projectId } = useParams<{ projectId: string }>();
-  const client = useWhisperly();
+  const { baseUrl } = useApi();
+  const { getIdToken } = useAuth();
   const { currentEntity, isLoading: entityLoading } = useEntity();
   const entitySlug = currentEntity?.entitySlug ?? '';
-  const { project } = useProjectDetail(client, entitySlug, projectId!);
+  const { project } = useProjectDetail({ baseUrl, getIdToken, entitySlug, projectId: projectId! });
   const {
     dictionaries,
     isLoading,
@@ -24,7 +26,7 @@ export default function Dictionary() {
     deleteDictionary,
     isCreating,
     isDeleting,
-  } = useDictionaryManager(client, entitySlug, projectId!);
+  } = useDictionaryManager({ baseUrl, getIdToken, entitySlug, projectId: projectId! });
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newDictionary, setNewDictionary] = useState<DictionaryCreateRequest>({});

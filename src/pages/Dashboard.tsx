@@ -3,19 +3,23 @@ import { Link } from 'react-router-dom';
 import { useProjectManager } from '@sudobility/whisperly_lib';
 import { useRateLimits } from '@sudobility/ratelimit_client';
 import { useApi } from '../contexts/ApiContext';
-import { useWhisperly } from '../contexts/WhisperlyContext';
 import { useEntity } from '../contexts/EntityContext';
 import { useAuth } from '../contexts/AuthContext';
 import Loading from '../components/Loading';
 import { Section } from '../components/layout/Section';
 
 export default function Dashboard() {
-  const client = useWhisperly();
   const { networkClient, baseUrl, token } = useApi();
+  const { getIdToken } = useAuth();
   const { currentEntity, isLoading: entityLoading } = useEntity();
   const { user, loading: authLoading } = useAuth();
   const entitySlug = currentEntity?.entitySlug ?? '';
-  const { projects, isLoading: projectsLoading } = useProjectManager(client, entitySlug);
+
+  const { projects, isLoading: projectsLoading } = useProjectManager({
+    baseUrl,
+    getIdToken,
+    entitySlug,
+  });
 
   // Use rate limits for usage data
   const { config, isLoadingConfig, refreshConfig } = useRateLimits(networkClient, baseUrl);
