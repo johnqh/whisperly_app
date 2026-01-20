@@ -10,7 +10,7 @@
         "@radix-ui/react-switch": "^1.2.6",
         "@radix-ui/react-tabs": "^1.1.13",
         "@sudobility/auth-components": "^1.0.7",
-        "@sudobility/auth_lib": "^0.0.20",
+        "@sudobility/auth_lib": "^0.0.21",
         "@sudobility/building_blocks": "^0.0.74",
         "@sudobility/components": "^5.0.1",
         "@sudobility/design": "^1.1.18",
@@ -27,8 +27,8 @@
         "@sudobility/subscription_lib": "^0.0.10",
         "@sudobility/types": "^1.9.48",
         "@sudobility/whisperly_client": "^1.0.12",
-        "@sudobility/whisperly_lib": "^1.0.13",
-        "@sudobility/whisperly_types": "^1.0.14",
+        "@sudobility/whisperly_lib": "^1.0.14",
+        "@sudobility/whisperly_types": "^1.0.15",
         "@tanstack/react-query": "^5.90.5",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
@@ -469,7 +469,7 @@
 
     "@sudobility/auth-components": ["@sudobility/auth-components@1.0.7", "", { "optionalDependencies": { "@rollup/rollup-linux-x64-gnu": "4.52.5", "@rollup/rollup-linux-x64-musl": "4.52.5" }, "peerDependencies": { "@heroicons/react": "^2.2.0", "@sudobility/components": "^4.0.160", "@sudobility/design": "^1.1.18", "firebase": "^10.0.0 || ^11.0.0 || ^12.0.0", "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-dI65dUh8Uv5lpJoFXs6g9vXnXlWfWKTE7Fa5DprS9iChp6ytWk481a4J1lTqmNMlb0xP4A4u2KaAMRzcCCmQpQ=="],
 
-    "@sudobility/auth_lib": ["@sudobility/auth_lib@0.0.20", "", { "peerDependencies": { "@react-native-firebase/app": ">=18.0.0", "@react-native-firebase/auth": ">=18.0.0", "@sudobility/di": "^1.5.25", "@sudobility/types": "^1.9.48", "@tanstack/react-query": "^5.0.0", "firebase": "^12.7.0", "react": "^18.0.0 || ^19.0.0" }, "optionalPeers": ["@react-native-firebase/app", "@react-native-firebase/auth", "firebase"] }, "sha512-6MqfwgfxV/QTSl2KThd0fC1NkZpb0Ji4qzagpLl0l+Tj+1uBvQHx2Qn7RCq0+R6gPClpKYfTKTR33J5h/BSbIA=="],
+    "@sudobility/auth_lib": ["@sudobility/auth_lib@0.0.21", "", { "peerDependencies": { "@react-native-firebase/app": ">=18.0.0", "@react-native-firebase/auth": ">=18.0.0", "@sudobility/di": "^1.5.25", "@sudobility/types": "^1.9.48", "@tanstack/react-query": "^5.0.0", "firebase": "^12.7.0", "react": "^18.0.0 || ^19.0.0" }, "optionalPeers": ["@react-native-firebase/app", "@react-native-firebase/auth", "firebase"] }, "sha512-w1a1h/OHbOV9uh4aLSwwodY8jzzxRVgLC0LR9iaFHKFfEPd/13g4W+Iv+sJz0JK3isERo3iJ8anHEo/Z8qRCEw=="],
 
     "@sudobility/building_blocks": ["@sudobility/building_blocks@0.0.74", "", { "peerDependencies": { "@heroicons/react": "^2.0.0", "@sudobility/components": "^5.0.1", "@sudobility/design": "^1.1.18", "class-variance-authority": "^0.7.0", "clsx": "^2.0.0", "firebase": "^11.0.0 || ^12.0.0", "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0", "tailwind-merge": "^2.0.0 || ^3.0.0" }, "optionalPeers": ["firebase"] }, "sha512-p13WlPcKEfUpwvr0fOMh5M4jX84W28qYsMXfA5v5t0P3J83iNZhFvYvPvezFhNlGOQwINIPDBFcIGGnh8QCyNA=="],
 
@@ -503,9 +503,9 @@
 
     "@sudobility/whisperly_client": ["@sudobility/whisperly_client@1.0.12", "", { "peerDependencies": { "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0" } }, "sha512-uTy+JWnnM15Ejg48zfen1D0VfYkAnR/dCwYvk5dQQEffl8eg7M7XT+iZ8VkM56BGe4eq9oHZvyFvjzozq4IupQ=="],
 
-    "@sudobility/whisperly_lib": ["@sudobility/whisperly_lib@1.0.13", "", { "peerDependencies": { "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0", "zustand": ">=5.0.0" } }, "sha512-UFX7uOHxUJ1MIToDlyFNDaoKkWkjvtQqv4X+0ersk958/eLlcUgbJ1gsDBWoR0yWatVCMdipkmLCBYK6Lan4fQ=="],
+    "@sudobility/whisperly_lib": ["@sudobility/whisperly_lib@1.0.14", "", { "peerDependencies": { "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0", "zustand": ">=5.0.0" } }, "sha512-O9FFgjLW9scHTfxNlwvKagYkezpHC+PDnn2kbZLA8FYa3Y0lwMFd2go3T26euDtphkYzrf4hJd/6bmeyJLxy6w=="],
 
-    "@sudobility/whisperly_types": ["@sudobility/whisperly_types@1.0.14", "", { "peerDependencies": { "@sudobility/types": "^1.9.48" } }, "sha512-6+FZom99ePBahsFpP9uBG76YyuMUpaWXez4QgXAS2WnEtnVk5vPLjnZ2ONpxWSfao7jms8/dxQvUhkr0u0tQ5g=="],
+    "@sudobility/whisperly_types": ["@sudobility/whisperly_types@1.0.15", "", { "peerDependencies": { "@sudobility/types": "^1.9.48" } }, "sha512-wLbBaTg+zYccfwmYZ7USkrQjUinrDwkKOuGWLtL7/SLadotITjD2f3wJjIFjqbU90seY8O5aPDA6lHdqLmdb3g=="],
 
     "@tanstack/query-core": ["@tanstack/query-core@5.90.15", "", {}, "sha512-mInIZNUZftbERE+/Hbtswfse49uUQwch46p+27gP9DWJL927UjnaWEF2t3RMOqBcXbfMdcNkPe06VyUIAZTV1g=="],
 

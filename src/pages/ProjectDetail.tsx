@@ -76,8 +76,8 @@ export default function ProjectDetail() {
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{project.project_name}</p>
           </div>
           <div className="space-x-2">
-            <Link to={`/projects/${project.id}/glossaries`}>
-              <Button variant="secondary">Manage Glossaries</Button>
+            <Link to={`/projects/${project.id}/dictionary`}>
+              <Button variant="secondary">Manage Dictionary</Button>
             </Link>
             {!isEditing && (
               <Button onClick={handleEdit}>Edit Project</Button>

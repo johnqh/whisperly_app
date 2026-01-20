@@ -117,10 +117,10 @@ export default function Projects() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm space-x-2">
                     <Link
-                      to={`/projects/${project.id}/glossaries`}
+                      to={`/projects/${project.id}/dictionary`}
                       className="text-primary-600 hover:text-primary-500"
                     >
-                      Glossaries
+                      Dictionary
                     </Link>
                     <button
                       onClick={() => handleDelete(project.id)}

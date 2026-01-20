@@ -137,11 +137,11 @@ export default function Settings() {
             </div>
             <div>
               <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                Glossary Callback URL
+                Dictionary Callback URL
               </h3>
               <p className="mt-1 text-gray-900 dark:text-gray-100 font-mono text-sm bg-gray-50 dark:bg-gray-700 p-2 rounded">
-                GET /glossary/{settings?.organization_path || '{org}'}/
-                {'{project}'}?glossary={'{term}'}&languages={'{lang1,lang2}'}
+                GET /dictionary/{settings?.organization_path || '{org}'}/
+                {'{project}'}?term={'{term}'}&languages={'{lang1,lang2}'}
               </p>
             </div>
           </div>

@@ -11,7 +11,7 @@ import Button from '../components/Button';
 import Loading from '../components/Loading';
 import { Section } from '../components/layout/Section';
 
-export default function Glossaries() {
+export default function Dictionary() {
   const { projectId } = useParams<{ projectId: string }>();
   const client = useWhisperly();
   const { currentEntity, isLoading: entityLoading } = useEntity();

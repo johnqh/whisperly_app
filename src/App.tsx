@@ -40,7 +40,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
-import Glossaries from "./pages/Glossaries";
+import Dictionary from "./pages/Dictionary";
 import Settings from "./pages/Settings";
 import Analytics from "./pages/Analytics";
 import Subscription from "./pages/Subscription";
@@ -123,7 +123,7 @@ function AppRoutes() {
           <Route index element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
           <Route path="projects/:projectId" element={<ProjectDetail />} />
-          <Route path="projects/:projectId/glossaries" element={<Glossaries />} />
+          <Route path="projects/:projectId/dictionary" element={<Dictionary />} />
           <Route path="settings" element={<Settings />} />
           <Route path="analytics" element={<Analytics />} />
           <Route path="rate-limits" element={<RateLimits />} />
