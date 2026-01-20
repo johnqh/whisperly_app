@@ -12,7 +12,9 @@ import i18n from "./i18n";
 import { ThemeProvider } from "./context/ThemeContext";
 import { ToastProvider } from "./context/ToastContext";
 import { AuthProviderWrapper } from "./components/providers/AuthProviderWrapper";
-import { ApiProvider } from "./context/ApiContext";
+import { ApiProvider } from "./contexts/ApiContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import { EntityProvider } from "./contexts/EntityContext";
 import { CurrentEntityProvider } from "@sudobility/entity_client";
 import { useAuthStatus } from "@sudobility/auth-components";
 import { entityClient } from "./config/entityClient";
@@ -151,16 +153,20 @@ function App() {
             <QueryClientProvider client={queryClient}>
               <ToastProvider>
                 <AuthProviderWrapper>
-                  <ApiProvider>
-                    <AuthAwareEntityProvider>
-                      <BrowserRouter>
-                        <EntityAwareSubscriptionProvider>
-                          <AppRoutes />
-                          <InfoBanner />
-                        </EntityAwareSubscriptionProvider>
-                      </BrowserRouter>
-                    </AuthAwareEntityProvider>
-                  </ApiProvider>
+                  <AuthProvider>
+                    <ApiProvider>
+                      <EntityProvider>
+                        <AuthAwareEntityProvider>
+                          <BrowserRouter>
+                            <EntityAwareSubscriptionProvider>
+                              <AppRoutes />
+                              <InfoBanner />
+                            </EntityAwareSubscriptionProvider>
+                          </BrowserRouter>
+                        </AuthAwareEntityProvider>
+                      </EntityProvider>
+                    </ApiProvider>
+                  </AuthProvider>
                 </AuthProviderWrapper>
               </ToastProvider>
             </QueryClientProvider>
