@@ -14,6 +14,11 @@ export default defineConfig({
       // Ensure all packages use the same React instance
       react: path.resolve(__dirname, "node_modules/react"),
       "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
+      // Ensure all packages use the same subscription-components instance
+      "@sudobility/subscription-components": path.resolve(
+        __dirname,
+        "node_modules/@sudobility/subscription-components",
+      ),
     },
     dedupe: [
       "react",
@@ -30,10 +35,12 @@ export default defineConfig({
       "@sudobility/types",
       "@sudobility/whisperly_client",
       "@sudobility/whisperly_lib",
+      "@sudobility/subscription-components",
+      "@sudobility/building_blocks",
     ],
   },
   optimizeDeps: {
-    include: ["react", "react-dom"],
+    include: ["react", "react-dom", "@sudobility/subscription-components"],
   },
   build: {
     target: "es2020",

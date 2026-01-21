@@ -1,13 +1,2 @@
-import { useContext } from "react";
-import {
-  ToastContext,
-  type ToastContextValue,
-} from "../context/toastContextDef";
-
-export function useToast(): ToastContextValue {
-  const context = useContext(ToastContext);
-  if (!context) {
-    throw new Error("useToast must be used within a ToastProvider");
-  }
-  return context;
-}
+// Re-export useToast from building_blocks (same context as ToastProvider)
+export { useToast } from "@sudobility/building_blocks";

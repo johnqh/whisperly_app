@@ -1,7 +1,7 @@
 {
   "name": "@sudobility/whisperly_app",
   "private": true,
-  "version": "1.0.30",
+  "version": "1.0.31",
   "type": "module",
   "scripts": {
     "dev": "bunx vite",
@@ -20,7 +20,7 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@sudobility/auth-components": "^1.0.7",
     "@sudobility/auth_lib": "^0.0.21",
-    "@sudobility/building_blocks": "^0.0.74",
+    "@sudobility/building_blocks": "^0.0.83",
     "@sudobility/components": "^5.0.1",
     "@sudobility/design": "^1.1.18",
     "@sudobility/devops-components": "^2.0.16",

@@ -1,25 +1,6 @@
-import { useMemo } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HelmetProvider } from "react-helmet-async";
-import { I18nextProvider } from "react-i18next";
-import { NetworkProvider } from "@sudobility/devops-components";
-import { getNetworkService } from "@sudobility/di";
-import { InfoBanner } from "@sudobility/di_web";
-import i18n from "./i18n";
-
-// Providers
-import { ThemeProvider } from "./context/ThemeContext";
-import { ToastProvider } from "./context/ToastContext";
-import { AuthProviderWrapper } from "./components/providers/AuthProviderWrapper";
-import { ApiProvider } from "./contexts/ApiContext";
-import { AuthProvider } from "./contexts/AuthContext";
-import { EntityProvider } from "./contexts/EntityContext";
-import { CurrentEntityProvider } from "@sudobility/entity_client";
-import { useAuthStatus } from "@sudobility/auth-components";
-import { entityClient } from "./config/entityClient";
-import { SubscriptionProviderWrapper } from "./components/providers/SubscriptionProviderWrapper";
-import { useCurrentEntity } from "./hooks/useCurrentEntity";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { SudobilityAppWithFirebaseAuthAndEntities } from "@sudobility/building_blocks/firebase";
+import { CONSTANTS } from "./config/constants";
 
 // Layout Components
 import { LanguageRedirect } from "./components/layout/LanguageRedirect";
@@ -51,40 +32,6 @@ import RateLimits from "./pages/RateLimits";
 import Workspaces from "./pages/Workspaces";
 import Members from "./pages/Members";
 import Invitations from "./pages/Invitations";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      retry: 1,
-    },
-  },
-});
-
-// Wrapper that connects CurrentEntityProvider to auth state
-function AuthAwareEntityProvider({ children }: { children: React.ReactNode }) {
-  const { user } = useAuthStatus();
-  const authUser = user ? { uid: user.uid, email: user.email } : null;
-  return (
-    <CurrentEntityProvider client={entityClient} user={authUser}>
-      {children}
-    </CurrentEntityProvider>
-  );
-}
-
-// Wrapper that reads entity ID from context and passes to subscription provider
-function EntityAwareSubscriptionProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const { currentEntityId } = useCurrentEntity();
-  return (
-    <SubscriptionProviderWrapper entityId={currentEntityId ?? undefined}>
-      {children}
-    </SubscriptionProviderWrapper>
-  );
-}
 
 function AppRoutes() {
   return (
@@ -127,7 +74,10 @@ function AppRoutes() {
           <Route path="projects" element={<Projects />} />
           <Route path="projects/new" element={<ProjectNew />} />
           <Route path="projects/:projectId" element={<ProjectDetail />} />
-          <Route path="projects/:projectId/dictionary" element={<Dictionary />} />
+          <Route
+            path="projects/:projectId/dictionary"
+            element={<Dictionary />}
+          />
           <Route path="settings" element={<Settings />} />
           <Route path="analytics" element={<Analytics />} />
           <Route path="rate-limits" element={<RateLimits />} />
@@ -145,37 +95,15 @@ function AppRoutes() {
 }
 
 function App() {
-  const networkService = useMemo(() => getNetworkService(), []);
-
   return (
-    <HelmetProvider>
-      <I18nextProvider i18n={i18n}>
-        <ThemeProvider>
-          <NetworkProvider networkService={networkService}>
-            <QueryClientProvider client={queryClient}>
-              <ToastProvider>
-                <AuthProviderWrapper>
-                  <AuthProvider>
-                    <ApiProvider>
-                      <EntityProvider>
-                        <AuthAwareEntityProvider>
-                          <BrowserRouter>
-                            <EntityAwareSubscriptionProvider>
-                              <AppRoutes />
-                              <InfoBanner />
-                            </EntityAwareSubscriptionProvider>
-                          </BrowserRouter>
-                        </AuthAwareEntityProvider>
-                      </EntityProvider>
-                    </ApiProvider>
-                  </AuthProvider>
-                </AuthProviderWrapper>
-              </ToastProvider>
-            </QueryClientProvider>
-          </NetworkProvider>
-        </ThemeProvider>
-      </I18nextProvider>
-    </HelmetProvider>
+    <SudobilityAppWithFirebaseAuthAndEntities
+      apiUrl={CONSTANTS.API_URL}
+      testMode={CONSTANTS.DEV_MODE}
+      revenueCatApiKey={CONSTANTS.REVENUECAT_API_KEY}
+      revenueCatApiKeySandbox={CONSTANTS.REVENUECAT_API_KEY_SANDBOX}
+    >
+      <AppRoutes />
+    </SudobilityAppWithFirebaseAuthAndEntities>
   );
 }
 
