@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useProjectManager } from '@sudobility/whisperly_lib';
+import { getFirebaseAuth } from '@sudobility/auth_lib';
 import { useApi } from '../contexts/ApiContext';
-import { useAuth } from '../contexts/AuthContext';
-import { useEntity } from '../contexts/EntityContext';
+import { useCurrentEntity } from '../hooks/useCurrentEntity';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
@@ -16,11 +16,18 @@ interface FieldErrors {
 
 export default function ProjectNew() {
   const { baseUrl } = useApi();
-  const { getIdToken } = useAuth();
-  const { currentEntity, isLoading: entityLoading } = useEntity();
+  const { currentEntity, isLoading: entityLoading } = useCurrentEntity();
   const { entitySlug: routeEntitySlug } = useParams<{ entitySlug: string }>();
   const entitySlug = routeEntitySlug || currentEntity?.entitySlug || '';
   const { navigate } = useLocalizedNavigate();
+
+  // Create getIdToken function from Firebase auth
+  const getIdToken = useCallback(async () => {
+    const auth = getFirebaseAuth();
+    const currentUser = auth?.currentUser;
+    if (!currentUser) return undefined;
+    return currentUser.getIdToken();
+  }, []);
 
   const [displayName, setDisplayName] = useState('');
   const [projectName, setProjectName] = useState('');

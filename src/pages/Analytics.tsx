@@ -1,16 +1,23 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useAnalyticsManager, useProjectManager } from '@sudobility/whisperly_lib';
+import { getFirebaseAuth } from '@sudobility/auth_lib';
 import { useApi } from '../contexts/ApiContext';
-import { useAuth } from '../contexts/AuthContext';
-import { useEntity } from '../contexts/EntityContext';
+import { useCurrentEntity } from '../hooks/useCurrentEntity';
 import Loading from '../components/Loading';
 import { Section } from '../components/layout/Section';
 
 export default function Analytics() {
   const { baseUrl } = useApi();
-  const { getIdToken } = useAuth();
-  const { currentEntity, isLoading: entityLoading } = useEntity();
+  const { currentEntity, isLoading: entityLoading } = useCurrentEntity();
   const entitySlug = currentEntity?.entitySlug ?? '';
+
+  // Create getIdToken function from Firebase auth
+  const getIdToken = useCallback(async () => {
+    const auth = getFirebaseAuth();
+    const currentUser = auth?.currentUser;
+    if (!currentUser) return undefined;
+    return currentUser.getIdToken();
+  }, []);
   const { projects } = useProjectManager({ baseUrl, getIdToken, entitySlug });
   const [selectedProjectId, setSelectedProjectId] = useState<string | undefined>(
     undefined

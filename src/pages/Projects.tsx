@@ -1,10 +1,11 @@
+import { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useProjectManager } from '@sudobility/whisperly_lib';
 import { ItemList } from '@sudobility/components';
 import type { Project } from '@sudobility/whisperly_types';
+import { getFirebaseAuth } from '@sudobility/auth_lib';
 import { useApi } from '../contexts/ApiContext';
-import { useAuth } from '../contexts/AuthContext';
-import { useEntity } from '../contexts/EntityContext';
+import { useCurrentEntity } from '../hooks/useCurrentEntity';
 import Loading from '../components/Loading';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 
@@ -43,11 +44,18 @@ const PlusIcon = () => (
 
 export default function Projects() {
   const { baseUrl } = useApi();
-  const { getIdToken } = useAuth();
-  const { currentEntity, isLoading: entityLoading } = useEntity();
+  const { currentEntity, isLoading: entityLoading } = useCurrentEntity();
   const { entitySlug: routeEntitySlug } = useParams<{ entitySlug: string }>();
   const entitySlug = routeEntitySlug || currentEntity?.entitySlug || '';
   const { navigate } = useLocalizedNavigate();
+
+  // Create getIdToken function from Firebase auth
+  const getIdToken = useCallback(async () => {
+    const auth = getFirebaseAuth();
+    const currentUser = auth?.currentUser;
+    if (!currentUser) return undefined;
+    return currentUser.getIdToken();
+  }, []);
 
   const {
     projects,

@@ -1,15 +1,24 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useSettingsManager } from '@sudobility/whisperly_lib';
+import { useAuthStatus } from '@sudobility/auth-components';
+import { getFirebaseAuth } from '@sudobility/auth_lib';
 import { useApi } from '../contexts/ApiContext';
-import { useAuth } from '../contexts/AuthContext';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
 import { Section } from '../components/layout/Section';
 
 export default function Settings() {
   const { baseUrl } = useApi();
-  const { user, loading: authLoading, getIdToken } = useAuth();
+  const { user, loading: authLoading } = useAuthStatus();
   const userId = user?.uid ?? '';
+
+  // Create getIdToken function from Firebase auth
+  const getIdToken = useCallback(async () => {
+    const auth = getFirebaseAuth();
+    const currentUser = auth?.currentUser;
+    if (!currentUser) return undefined;
+    return currentUser.getIdToken();
+  }, []);
   const { settings, isLoading, updateSettings, isUpdating } =
     useSettingsManager({ baseUrl, getIdToken, userId });
 

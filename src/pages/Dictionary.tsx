@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   useDictionaryManager,
   useProjectDetail,
 } from '@sudobility/whisperly_lib';
 import type { DictionaryCreateRequest, DictionarySearchResponse } from '@sudobility/whisperly_types';
+import { getFirebaseAuth } from '@sudobility/auth_lib';
 import { useApi } from '../contexts/ApiContext';
-import { useAuth } from '../contexts/AuthContext';
-import { useEntity } from '../contexts/EntityContext';
+import { useCurrentEntity } from '../hooks/useCurrentEntity';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
 import { Section } from '../components/layout/Section';
@@ -15,9 +15,16 @@ import { Section } from '../components/layout/Section';
 export default function Dictionary() {
   const { projectId } = useParams<{ projectId: string }>();
   const { baseUrl } = useApi();
-  const { getIdToken } = useAuth();
-  const { currentEntity, isLoading: entityLoading } = useEntity();
+  const { currentEntity, isLoading: entityLoading } = useCurrentEntity();
   const entitySlug = currentEntity?.entitySlug ?? '';
+
+  // Create getIdToken function from Firebase auth
+  const getIdToken = useCallback(async () => {
+    const auth = getFirebaseAuth();
+    const currentUser = auth?.currentUser;
+    if (!currentUser) return undefined;
+    return currentUser.getIdToken();
+  }, []);
   const { project } = useProjectDetail({ baseUrl, getIdToken, entitySlug, projectId: projectId! });
   const {
     dictionaries,

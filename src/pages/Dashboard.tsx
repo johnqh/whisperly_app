@@ -1,19 +1,27 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useProjectManager } from '@sudobility/whisperly_lib';
 import { useRateLimits } from '@sudobility/ratelimit_client';
+import { useAuthStatus } from '@sudobility/auth-components';
+import { getFirebaseAuth } from '@sudobility/auth_lib';
 import { useApi } from '../contexts/ApiContext';
-import { useEntity } from '../contexts/EntityContext';
-import { useAuth } from '../contexts/AuthContext';
+import { useCurrentEntity } from '../hooks/useCurrentEntity';
 import Loading from '../components/Loading';
 import { Section } from '../components/layout/Section';
 
 export default function Dashboard() {
   const { networkClient, baseUrl, token } = useApi();
-  const { getIdToken } = useAuth();
-  const { currentEntity, isLoading: entityLoading } = useEntity();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useAuthStatus();
+  const { currentEntity, isLoading: entityLoading } = useCurrentEntity();
   const entitySlug = currentEntity?.entitySlug ?? '';
+
+  // Create getIdToken function from Firebase auth
+  const getIdToken = useCallback(async () => {
+    const auth = getFirebaseAuth();
+    const currentUser = auth?.currentUser;
+    if (!currentUser) return undefined;
+    return currentUser.getIdToken();
+  }, []);
 
   const { projects, isLoading: projectsLoading } = useProjectManager({
     baseUrl,

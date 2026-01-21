@@ -14,6 +14,8 @@ export default defineConfig({
       // Ensure all packages use the same React instance
       react: path.resolve(__dirname, "node_modules/react"),
       "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
+      // Ensure all packages use the same zustand instance (critical for stores to work)
+      zustand: path.resolve(__dirname, "node_modules/zustand"),
       // Ensure all packages use the same subscription-components instance
       "@sudobility/subscription-components": path.resolve(
         __dirname,
@@ -26,6 +28,9 @@ export default defineConfig({
       "zustand",
       "@tanstack/react-query",
       "recharts",
+      "firebase",
+      "firebase/app",
+      "firebase/auth",
       "@sudobility/di",
       "@sudobility/di_web",
       "@sudobility/auth_lib",
@@ -40,7 +45,15 @@ export default defineConfig({
     ],
   },
   optimizeDeps: {
-    include: ["react", "react-dom", "@sudobility/subscription-components"],
+    include: [
+      "react",
+      "react-dom",
+      "zustand",
+      "@tanstack/react-query",
+      "@sudobility/subscription-components",
+    ],
+    // Exclude linked workspace packages from pre-bundling so changes are picked up immediately
+    exclude: ["@sudobility/whisperly_lib"],
   },
   build: {
     target: "es2020",
