@@ -1,9 +1,10 @@
+import { useState, useRef } from "react";
 import { Outlet, useParams, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useEntities } from "@sudobility/entity_client";
+import { MasterDetailLayout } from "@sudobility/components";
 import { entityClient } from "../../config/entityClient";
 import { ScreenContainer } from "./ScreenContainer";
-import { LocalizedLink } from "./LocalizedLink";
 import { useLocalizedNavigate } from "../../hooks/useLocalizedNavigate";
 import {
   Squares2X2Icon,
@@ -36,6 +37,8 @@ export function DashboardLayout() {
   const { navigate } = useLocalizedNavigate();
   const { entitySlug } = useParams<{ entitySlug: string }>();
   const { data: entities } = useEntities(entityClient);
+  const [mobileView, setMobileView] = useState<"navigation" | "content">("navigation");
+  const animationRef = useRef<{ triggerTransition: (onContentChange: () => void) => void } | null>(null);
 
   const handleEntityChange = (slug: string) => {
     localStorage.setItem("whisperly_last_entity", slug);
@@ -50,58 +53,108 @@ export function DashboardLayout() {
     return location.pathname.includes(`${basePath}/${path}`);
   };
 
+  const handleNavigate = (path: string) => {
+    if (animationRef.current) {
+      animationRef.current.triggerTransition(() => {
+        navigate(path);
+        setMobileView("content");
+      });
+    } else {
+      navigate(path);
+      setMobileView("content");
+    }
+  };
+
+  const handleBackToNavigation = () => {
+    setMobileView("navigation");
+  };
+
+  // Get detail title based on current route
+  const getDetailTitle = (): string => {
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+    // Find the segment after entitySlug
+    const entityIndex = pathSegments.indexOf(entitySlug || '');
+    const pageSegment = pathSegments[entityIndex + 1];
+
+    if (!pageSegment) return t("navigation.overview");
+
+    const navItem = NAV_ITEMS.find(item => item.path === pageSegment);
+    if (navItem) {
+      return t(`navigation.${navItem.key}`);
+    }
+
+    return pageSegment.charAt(0).toUpperCase() + pageSegment.slice(1);
+  };
+
+  // Master content (sidebar navigation)
+  const masterContent = (
+    <div className="p-4">
+      {/* Entity Selector */}
+      <div className="mb-6">
+        <div className="relative">
+          <select
+            value={entitySlug || ""}
+            onChange={(e) => handleEntityChange(e.target.value)}
+            className="w-full appearance-none rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 pr-8 text-sm font-medium focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          >
+            {entities?.map((entity) => (
+              <option key={entity.entitySlug} value={entity.entitySlug}>
+                {entity.displayName || entity.entitySlug}
+              </option>
+            ))}
+          </select>
+          <ChevronDownIcon className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <nav className="space-y-1">
+        {NAV_ITEMS.map((item) => {
+          const Icon = item.icon;
+          const path = `/dashboard/${entitySlug}${item.path ? `/${item.path}` : ""}`;
+          const active = isActive(item.path);
+
+          return (
+            <button
+              key={item.key}
+              onClick={() => handleNavigate(path)}
+              className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                active
+                  ? "bg-primary-500 text-white"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+              }`}
+            >
+              <Icon className="h-4 w-4" />
+              {t(`navigation.${item.key}`)}
+            </button>
+          );
+        })}
+      </nav>
+    </div>
+  );
+
+  // Detail content (main area with nested routes)
+  const detailContent = (
+    <div className="p-4 md:p-6">
+      <Outlet />
+    </div>
+  );
+
   return (
     <ScreenContainer showBreadcrumbs={true} compactFooter={true}>
-      <div className="flex min-h-[calc(100vh-8rem)]">
-        {/* Sidebar */}
-        <aside className="hidden w-64 border-r border-border bg-muted/30 md:block">
-          <div className="sticky top-16 p-4">
-            {/* Entity Selector */}
-            <div className="mb-6">
-              <div className="relative">
-                <select
-                  value={entitySlug || ""}
-                  onChange={(e) => handleEntityChange(e.target.value)}
-                  className="w-full appearance-none rounded-md border border-border bg-background px-3 py-2 pr-8 text-sm font-medium focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                >
-                  {entities?.map((entity) => (
-                    <option key={entity.entitySlug} value={entity.entitySlug}>
-                      {entity.displayName || entity.entitySlug}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDownIcon className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              </div>
-            </div>
-
-            {/* Navigation */}
-            <nav className="space-y-1">
-              {NAV_ITEMS.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <LocalizedLink
-                    key={item.key}
-                    to={`/dashboard/${entitySlug}${item.path ? `/${item.path}` : ""}`}
-                    className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                      isActive(item.path)
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                    }`}
-                  >
-                    <Icon className="h-4 w-4" />
-                    {t(`navigation.${item.key}`)}
-                  </LocalizedLink>
-                );
-              })}
-            </nav>
-          </div>
-        </aside>
-
-        {/* Main content */}
-        <main className="flex-1">
-          <Outlet />
-        </main>
-      </div>
+      <MasterDetailLayout
+        masterTitle={t("title")}
+        masterContent={masterContent}
+        detailContent={detailContent}
+        detailTitle={getDetailTitle()}
+        mobileView={mobileView}
+        onBackToNavigation={handleBackToNavigation}
+        animationRef={animationRef}
+        enableAnimations={true}
+        animationDuration={150}
+        masterWidth={260}
+        stickyTopOffset={80}
+      />
     </ScreenContainer>
   );
 }

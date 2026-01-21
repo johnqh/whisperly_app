@@ -41,6 +41,7 @@ import Login from "./pages/Login";
 // Dashboard Pages
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
+import ProjectNew from "./pages/ProjectNew";
 import ProjectDetail from "./pages/ProjectDetail";
 import Dictionary from "./pages/Dictionary";
 import Settings from "./pages/Settings";
@@ -124,6 +125,7 @@ function AppRoutes() {
         >
           <Route index element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
+          <Route path="projects/new" element={<ProjectNew />} />
           <Route path="projects/:projectId" element={<ProjectDetail />} />
           <Route path="projects/:projectId/dictionary" element={<Dictionary />} />
           <Route path="settings" element={<Settings />} />

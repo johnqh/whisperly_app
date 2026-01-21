@@ -18,6 +18,8 @@ export default defineConfig({
     dedupe: [
       "react",
       "react-dom",
+      "zustand",
+      "@tanstack/react-query",
       "recharts",
       "@sudobility/di",
       "@sudobility/di_web",
@@ -26,6 +28,8 @@ export default defineConfig({
       "@sudobility/entity_client",
       "@sudobility/components",
       "@sudobility/types",
+      "@sudobility/whisperly_client",
+      "@sudobility/whisperly_lib",
     ],
   },
   optimizeDeps: {
