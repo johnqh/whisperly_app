@@ -1,7 +1,7 @@
 {
   "name": "@sudobility/whisperly_app",
   "private": true,
-  "version": "1.0.32",
+  "version": "1.0.33",
   "type": "module",
   "scripts": {
     "dev": "bunx vite",
@@ -36,7 +36,7 @@
     "@sudobility/subscription_lib": "^0.0.11",
     "@sudobility/types": "^1.9.48",
     "@sudobility/whisperly_client": "^1.0.14",
-    "@sudobility/whisperly_lib": "^1.0.18",
+    "@sudobility/whisperly_lib": "^1.0.20",
     "@sudobility/whisperly_types": "^1.0.15",
     "@tanstack/react-query": "^5.90.5",
     "bs58": "^6.0.0",
