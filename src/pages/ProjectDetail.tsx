@@ -88,6 +88,9 @@ export default function ProjectDetail() {
             <Link to={`/projects/${project.id}/dictionary`}>
               <Button variant="secondary">Manage Dictionary</Button>
             </Link>
+            <Link to={`/projects/${project.id}/languages`}>
+              <Button variant="secondary">Manage Languages</Button>
+            </Link>
             {!isEditing && (
               <Button onClick={handleEdit}>Edit Project</Button>
             )}

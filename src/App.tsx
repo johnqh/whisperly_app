@@ -25,6 +25,7 @@ import Projects from "./pages/Projects";
 import ProjectNew from "./pages/ProjectNew";
 import ProjectDetail from "./pages/ProjectDetail";
 import Dictionary from "./pages/Dictionary";
+import Languages from "./pages/Languages";
 import Settings from "./pages/Settings";
 import Analytics from "./pages/Analytics";
 import Subscription from "./pages/Subscription";
@@ -77,6 +78,10 @@ function AppRoutes() {
           <Route
             path="projects/:projectId/dictionary"
             element={<Dictionary />}
+          />
+          <Route
+            path="projects/:projectId/languages"
+            element={<Languages />}
           />
           <Route path="settings" element={<Settings />} />
           <Route path="analytics" element={<Analytics />} />
