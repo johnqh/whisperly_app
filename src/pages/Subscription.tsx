@@ -45,12 +45,12 @@ function SubscriptionContent() {
   const { t } = useTranslation("subscription");
   const { entitySlug = "" } = useParams<{ entitySlug: string }>();
   const { success } = useToast();
-  const { networkClient, baseUrl, token, isReady } = useApi();
+  const { networkClient, baseUrl, token, testMode, isReady } = useApi();
   const { currentEntityId } = useCurrentEntity();
   const { purchase, restore } = useSafeSubscriptionContext();
 
   const { config: rateLimitsConfig, refreshConfig: refreshRateLimits } =
-    useRateLimits(networkClient, baseUrl);
+    useRateLimits(networkClient, baseUrl, testMode);
 
   // Fetch rate limits on mount
   useEffect(() => {

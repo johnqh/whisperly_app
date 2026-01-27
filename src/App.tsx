@@ -11,7 +11,7 @@ import { DashboardLayout } from "./components/layout/DashboardLayout";
 
 // Public Pages
 import { HomePage } from "./pages/HomePage";
-import { PricingPage } from "./pages/PricingPage";
+import { PricingPageWrapper } from "./pages/PricingPageWrapper";
 import { PrivacyPage } from "./pages/PrivacyPage";
 import { TermsPage } from "./pages/TermsPage";
 import { CookiesPage } from "./pages/CookiesPage";
@@ -45,7 +45,7 @@ function AppRoutes() {
         {/* Public routes */}
         <Route index element={<HomePage />} />
         <Route path="login" element={<Login />} />
-        <Route path="pricing" element={<PricingPage />} />
+        <Route path="pricing" element={<PricingPageWrapper />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="privacy" element={<PrivacyPage />} />
         <Route path="terms" element={<TermsPage />} />

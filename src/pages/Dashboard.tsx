@@ -10,7 +10,7 @@ import { Section } from '../components/layout/Section';
 import { LocalizedLink } from '../components/layout/LocalizedLink';
 
 export default function Dashboard() {
-  const { networkClient, baseUrl, token } = useApi();
+  const { networkClient, baseUrl, token, testMode } = useApi();
   const { user, loading: authLoading } = useAuthStatus();
   const { currentEntity, isLoading: entityLoading } = useCurrentEntity();
   const entitySlug = currentEntity?.entitySlug ?? '';
@@ -30,7 +30,7 @@ export default function Dashboard() {
   });
 
   // Use rate limits for usage data
-  const { config, isLoadingConfig, refreshConfig } = useRateLimits(networkClient, baseUrl);
+  const { config, isLoadingConfig, refreshConfig } = useRateLimits(networkClient, baseUrl, testMode);
 
   // Fetch rate limits config on mount
   React.useEffect(() => {

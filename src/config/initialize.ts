@@ -25,8 +25,8 @@ export async function initializeApp(): Promise<void> {
     },
     enableFirebaseAuth: true,
     revenueCatConfig: {
-      apiKey: import.meta.env.VITE_REVENUECAT_API_KEY,
-      apiKeySandbox: import.meta.env.VITE_REVENUECAT_API_KEY_SANDBOX,
+      apiKey: import.meta.env.VITE_REVENUECAT_API_KEY || "",
+      apiKeySandbox: import.meta.env.VITE_REVENUECAT_API_KEY_SANDBOX || "",
       isProduction: import.meta.env.MODE === "production",
     },
     registerServiceWorker,

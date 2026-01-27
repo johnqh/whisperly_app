@@ -7,11 +7,14 @@ import {
   type PricingPageFormatters,
   type FAQItem,
 } from "@sudobility/building_blocks";
+import { useSafeSubscriptionContext } from "../components/providers/SafeSubscriptionContext";
 import { useCurrentEntity } from "../hooks/useCurrentEntity";
 import { ScreenContainer } from "../components/layout/ScreenContainer";
 import { useLocalizedNavigate } from "../hooks/useLocalizedNavigate";
+import { useToast } from "../hooks/useToast";
 import { CONSTANTS } from "../config/constants";
 import { useBuildingBlocksAnalytics } from "../hooks/useBuildingBlocksAnalytics";
+import { refreshSubscription } from "@sudobility/subscription_lib";
 
 // Package ID to entitlement mapping (from RevenueCat configuration)
 const PACKAGE_ENTITLEMENT_MAP: Record<string, string> = {
@@ -24,23 +27,42 @@ const PACKAGE_ENTITLEMENT_MAP: Record<string, string> = {
 export function PricingPage() {
   const { t } = useTranslation("pricing");
   const { t: tSub } = useTranslation("subscription");
-  const { user, openModal } = useAuthStatus();
+  const { user } = useAuthStatus();
+  const { purchase } = useSafeSubscriptionContext();
   const { currentEntitySlug } = useCurrentEntity();
   const { navigate } = useLocalizedNavigate();
+  const { success, error: showError } = useToast();
   const onTrack = useBuildingBlocksAnalytics();
 
   const isAuthenticated = !!user;
 
-  const handlePlanClick = async (_planIdentifier: string) => {
+  const handlePlanClick = async (planIdentifier: string) => {
     if (isAuthenticated) {
-      // Navigate to subscription page for purchase flow
-      if (currentEntitySlug) {
-        navigate(`/dashboard/${currentEntitySlug}/subscription`);
-      } else {
-        navigate("/dashboard");
+      // Directly initiate purchase flow
+      try {
+        const result = await purchase(planIdentifier);
+        if (result) {
+          // Refresh subscription_lib data to sync state
+          await refreshSubscription();
+          success(
+            tSub("purchase.success", "Subscription activated successfully!"),
+          );
+          // Navigate to dashboard after successful purchase
+          if (currentEntitySlug) {
+            navigate(`/dashboard/${currentEntitySlug}`);
+          } else {
+            navigate("/dashboard");
+          }
+        }
+      } catch (err) {
+        showError(
+          err instanceof Error
+            ? err.message
+            : tSub("purchase.error", "Failed to complete purchase"),
+        );
       }
     } else {
-      openModal();
+      navigate("/login");
     }
   };
 
@@ -52,7 +74,7 @@ export function PricingPage() {
         navigate("/dashboard");
       }
     } else {
-      openModal();
+      navigate("/login");
     }
   };
 
@@ -150,7 +172,7 @@ export function PricingPage() {
         onFreePlanClick={handleFreePlanClick}
         faqItems={faqItems.length > 0 ? faqItems : undefined}
         onTrack={onTrack}
-        offerId={import.meta.env.VITE_REVENUECAT_OFFER_ID}
+        offerId={import.meta.env.VITE_REVENUECAT_OFFER_ID || "api"}
       />
     </ScreenContainer>
   );
