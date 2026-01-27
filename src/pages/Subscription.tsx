@@ -171,7 +171,7 @@ export default function Subscription() {
 
   return (
     <AppSubscriptionsPage
-      offerId="default"
+      offerId={import.meta.env.VITE_REVENUECAT_OFFER_ID}
       labels={labels}
       formatters={formatters}
       onPurchase={handlePurchase}

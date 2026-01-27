@@ -150,7 +150,7 @@ export function PricingPage() {
         onFreePlanClick={handleFreePlanClick}
         faqItems={faqItems.length > 0 ? faqItems : undefined}
         onTrack={onTrack}
-        offerId="default"
+        offerId={import.meta.env.VITE_REVENUECAT_OFFER_ID}
       />
     </ScreenContainer>
   );

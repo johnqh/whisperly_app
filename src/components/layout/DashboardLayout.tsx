@@ -118,14 +118,17 @@ export function DashboardLayout() {
             <button
               key={item.key}
               onClick={() => handleNavigate(path)}
-              className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+              className={`relative flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 active
-                  ? "bg-primary-500 text-white"
-                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  ? "text-blue-700 dark:text-blue-300"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-blue-500/10 dark:hover:bg-blue-400/10"
               }`}
             >
-              <Icon className="h-4 w-4" />
-              {t(`navigation.${item.key}`)}
+              {active && (
+                <div className="absolute inset-1 bg-blue-500/15 dark:bg-blue-400/15 rounded-lg pointer-events-none" />
+              )}
+              <Icon className={`relative h-4 w-4 ${active ? "text-blue-600 dark:text-blue-400" : ""}`} />
+              <span className="relative">{t(`navigation.${item.key}`)}</span>
             </button>
           );
         })}

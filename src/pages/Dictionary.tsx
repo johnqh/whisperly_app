@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
   useDictionaryManager,
   useProjectDetail,
@@ -11,12 +11,13 @@ import { useCurrentEntity } from '../hooks/useCurrentEntity';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
 import { Section } from '../components/layout/Section';
+import { LocalizedLink } from '../components/layout/LocalizedLink';
 
 export default function Dictionary() {
-  const { projectId } = useParams<{ projectId: string }>();
+  const { entitySlug: routeEntitySlug, projectId } = useParams<{ entitySlug: string; projectId: string }>();
   const { baseUrl } = useApi();
   const { currentEntity, isLoading: entityLoading } = useCurrentEntity();
-  const entitySlug = currentEntity?.entitySlug ?? '';
+  const entitySlug = routeEntitySlug || currentEntity?.entitySlug || '';
 
   // Create getIdToken function from Firebase auth
   const getIdToken = useCallback(async () => {
@@ -79,12 +80,12 @@ export default function Dictionary() {
         <div className="flex justify-between items-start">
           <div>
             <div className="flex items-center space-x-3">
-              <Link
-                to={`/projects/${projectId}`}
+              <LocalizedLink
+                to={`/dashboard/${entitySlug}/projects/${projectId}`}
                 className="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400"
               >
                 &larr;
-              </Link>
+              </LocalizedLink>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Dictionary</h1>
             </div>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">

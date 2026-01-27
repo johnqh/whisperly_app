@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import { useProjectManager } from '@sudobility/whisperly_lib';
 import { useRateLimits } from '@sudobility/ratelimit_client';
 import { useAuthStatus } from '@sudobility/auth-components';
@@ -8,6 +7,7 @@ import { useApi } from '../contexts/ApiContext';
 import { useCurrentEntity } from '../hooks/useCurrentEntity';
 import Loading from '../components/Loading';
 import { Section } from '../components/layout/Section';
+import { LocalizedLink } from '../components/layout/LocalizedLink';
 
 export default function Dashboard() {
   const { networkClient, baseUrl, token } = useApi();
@@ -66,12 +66,12 @@ export default function Dashboard() {
             <p className="mt-2 text-3xl font-semibold text-gray-900 dark:text-gray-100">
               {projects.length}
             </p>
-            <Link
-              to="/projects"
+            <LocalizedLink
+              to={`/dashboard/${entitySlug}/projects`}
               className="mt-4 inline-block text-sm text-primary-600 hover:text-primary-500"
             >
               View all projects &rarr;
-            </Link>
+            </LocalizedLink>
           </div>
 
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
@@ -79,12 +79,12 @@ export default function Dashboard() {
             <p className="mt-2 text-3xl font-semibold text-gray-900 dark:text-gray-100 capitalize">
               {tier || 'None'}
             </p>
-            <Link
+            <LocalizedLink
               to="/subscription"
               className="mt-4 inline-block text-sm text-primary-600 hover:text-primary-500"
             >
               Manage subscription &rarr;
-            </Link>
+            </LocalizedLink>
           </div>
 
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
@@ -121,9 +121,9 @@ export default function Dashboard() {
           </div>
           <div className="divide-y divide-gray-200 dark:divide-gray-700">
             {projects.slice(0, 5).map(project => (
-              <Link
+              <LocalizedLink
                 key={project.id}
-                to={`/projects/${project.id}`}
+                to={`/dashboard/${entitySlug}/projects/${project.id}`}
                 className="block px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700"
               >
                 <div className="flex justify-between items-center">
@@ -141,14 +141,14 @@ export default function Dashboard() {
                     {project.is_active ? 'Active' : 'Inactive'}
                   </span>
                 </div>
-              </Link>
+              </LocalizedLink>
             ))}
             {projects.length === 0 && (
               <div className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                 No projects yet.{' '}
-                <Link to="/projects" className="text-primary-600 hover:underline">
+                <LocalizedLink to={`/dashboard/${entitySlug}/projects/new`} className="text-primary-600 hover:underline">
                   Create your first project
-                </Link>
+                </LocalizedLink>
               </div>
             )}
           </div>
