@@ -1,6 +1,6 @@
-import { useMemo } from "react";
+import { useMemo, useCallback, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useSubscriptionContext } from "@sudobility/subscription-components";
 import {
   AppSubscriptionsPage,
   type SubscriptionPageLabels,
@@ -8,7 +8,12 @@ import {
 } from "@sudobility/building_blocks";
 import { getInfoService } from "@sudobility/di";
 import { InfoType } from "@sudobility/types";
+import { useRateLimits } from "@sudobility/ratelimit_client";
 import { useToast } from "../hooks/useToast";
+import { useApi } from "../contexts/ApiContext";
+import { useCurrentEntity } from "../hooks/useCurrentEntity";
+import { PricingSubscriptionProvider } from "../components/providers/PricingSubscriptionProvider";
+import { useSafeSubscriptionContext } from "../components/providers/SafeSubscriptionContext";
 
 // Features for each product tier
 const PRODUCT_FEATURES: Record<string, string[]> = {
@@ -36,16 +41,42 @@ const PRODUCT_FEATURES: Record<string, string[]> = {
   ],
 };
 
-export default function Subscription() {
+function SubscriptionContent() {
   const { t } = useTranslation("subscription");
+  const { entitySlug = "" } = useParams<{ entitySlug: string }>();
   const { success } = useToast();
-  const subscriptionContext = useSubscriptionContext();
+  const { networkClient, baseUrl, token, isReady } = useApi();
+  const { currentEntityId } = useCurrentEntity();
+  const { purchase, restore } = useSafeSubscriptionContext();
 
-  const handlePurchaseSuccess = () => {
+  const { config: rateLimitsConfig, refreshConfig: refreshRateLimits } =
+    useRateLimits(networkClient, baseUrl);
+
+  // Fetch rate limits on mount
+  useEffect(() => {
+    if (isReady && token && entitySlug) {
+      refreshRateLimits(token, entitySlug);
+    }
+  }, [isReady, token, entitySlug, refreshRateLimits]);
+
+  // Purchase handler - wraps the subscription context purchase
+  const handlePurchase = useCallback(
+    async (packageId: string): Promise<boolean> => {
+      return purchase(packageId, currentEntityId ?? undefined);
+    },
+    [purchase, currentEntityId],
+  );
+
+  // Restore handler - wraps the subscription context restore
+  const handleRestore = useCallback(async (): Promise<boolean> => {
+    return restore(currentEntityId ?? undefined);
+  }, [restore, currentEntityId]);
+
+  const handlePurchaseSuccess = async () => {
     success(t("purchase.success", "Subscription activated successfully!"));
   };
 
-  const handleRestoreSuccess = () => {
+  const handleRestoreSuccess = async () => {
     success(t("restore.success", "Purchases restored successfully!"));
   };
 
@@ -151,27 +182,10 @@ export default function Subscription() {
     [t]
   );
 
-  const handlePurchase = async (packageId: string): Promise<boolean> => {
-    try {
-      const result = await subscriptionContext.purchase(packageId);
-      return !!result;
-    } catch {
-      return false;
-    }
-  };
-
-  const handleRestore = async (): Promise<boolean> => {
-    try {
-      const result = await subscriptionContext.restore();
-      return !!result;
-    } catch {
-      return false;
-    }
-  };
-
   return (
     <AppSubscriptionsPage
-      offerId={import.meta.env.VITE_REVENUECAT_OFFER_ID}
+      offerId="api"
+      rateLimitsConfig={rateLimitsConfig}
       labels={labels}
       formatters={formatters}
       onPurchase={handlePurchase}
@@ -181,5 +195,15 @@ export default function Subscription() {
       onError={handleError}
       onWarning={handleWarning}
     />
+  );
+}
+
+export default function Subscription() {
+  const { currentEntityId } = useCurrentEntity();
+
+  return (
+    <PricingSubscriptionProvider entityId={currentEntityId ?? undefined}>
+      <SubscriptionContent />
+    </PricingSubscriptionProvider>
   );
 }

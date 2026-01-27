@@ -1,18 +1,24 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   RateLimitsPage as RateLimitsPageComponent,
   RateLimitHistoryPage,
 } from '@sudobility/ratelimit_pages';
 import { useApi } from '../contexts/ApiContext';
-import { useNavigate } from 'react-router-dom';
+import { useCurrentEntity } from '../hooks/useCurrentEntity';
+import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { Section } from '../components/layout/Section';
 
 type TabType = 'limits' | 'history';
 
 export default function RateLimits() {
+  const { entitySlug: routeEntitySlug } = useParams<{ entitySlug: string }>();
   const { networkClient, baseUrl, token } = useApi();
-  const navigate = useNavigate();
+  const { currentEntity } = useCurrentEntity();
+  const { navigate } = useLocalizedNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('limits');
+
+  const entitySlug = routeEntitySlug || currentEntity?.entitySlug || '';
 
   return (
     <>
@@ -57,7 +63,8 @@ export default function RateLimits() {
           networkClient={networkClient}
           baseUrl={baseUrl}
           token={token}
-          onUpgradeClick={() => navigate('/subscription')}
+          entitySlug={entitySlug}
+          onUpgradeClick={() => navigate(`/dashboard/${entitySlug}/subscription`)}
           upgradeButtonLabel="Upgrade Plan"
           autoFetch={true}
           labels={{
@@ -84,6 +91,7 @@ export default function RateLimits() {
           networkClient={networkClient}
           baseUrl={baseUrl}
           token={token}
+          entitySlug={entitySlug}
           autoFetch={true}
           chartHeight={350}
           labels={{
