@@ -1,87 +1,62 @@
 /**
- * Analytics Service Singleton
- *
- * Uses the DI Firebase service for analytics tracking.
- * Call directly from anywhere - no hooks, no context.
+ * Analytics Service - Re-export from di_web
  *
  * Usage: analyticsService.trackEvent('button_click', { button_name: 'submit' })
  */
 
-import { getFirebaseService } from '@sudobility/di';
+import {
+  getAnalyticsService,
+  type AnalyticsEventParams,
+} from "@sudobility/di_web";
 
-export interface AnalyticsEventParams {
-  [key: string]: unknown;
-}
+export type { AnalyticsEventParams };
 
 /**
- * Analytics service singleton - call directly from anywhere
+ * Analytics service singleton - lazy accessor that delegates to di_web
  */
 export const analyticsService = {
-  /**
-   * Track a custom event
-   */
   trackEvent(eventName: string, params?: AnalyticsEventParams): void {
     try {
-      const service = getFirebaseService();
-      if (service.analytics.isSupported()) {
-        service.analytics.logEvent(eventName, {
-          ...params,
-          timestamp: Date.now(),
-        });
-      }
+      getAnalyticsService().trackEvent(eventName, params);
     } catch {
-      // Firebase service not initialized
+      // Analytics not initialized
     }
   },
-
-  /**
-   * Track a page view
-   */
   trackPageView(pagePath: string, pageTitle?: string): void {
-    this.trackEvent('page_view', {
-      page_path: pagePath,
-      page_title: pageTitle,
-    });
+    try {
+      getAnalyticsService().trackPageView(pagePath, pageTitle);
+    } catch {
+      // Analytics not initialized
+    }
   },
-
-  /**
-   * Track a button click
-   */
   trackButtonClick(buttonName: string, params?: AnalyticsEventParams): void {
-    this.trackEvent('button_click', {
-      button_name: buttonName,
-      ...params,
-    });
+    try {
+      getAnalyticsService().trackButtonClick(buttonName, params);
+    } catch {
+      // Analytics not initialized
+    }
   },
-
-  /**
-   * Track a link click
-   */
-  trackLinkClick(linkUrl: string, linkText?: string, params?: AnalyticsEventParams): void {
-    this.trackEvent('link_click', {
-      link_url: linkUrl,
-      link_text: linkText,
-      ...params,
-    });
+  trackLinkClick(
+    linkUrl: string,
+    linkText?: string,
+    params?: AnalyticsEventParams,
+  ): void {
+    try {
+      getAnalyticsService().trackLinkClick(linkUrl, linkText, params);
+    } catch {
+      // Analytics not initialized
+    }
   },
-
-  /**
-   * Track an error
-   */
   trackError(errorMessage: string, errorCode?: string): void {
-    this.trackEvent('error_occurred', {
-      error_message: errorMessage,
-      error_code: errorCode,
-    });
+    try {
+      getAnalyticsService().trackError(errorMessage, errorCode);
+    } catch {
+      // Analytics not initialized
+    }
   },
-
-  /**
-   * Check if analytics is enabled
-   */
   isEnabled(): boolean {
     try {
-      const service = getFirebaseService();
-      return service.analytics.isSupported();
+      return getAnalyticsService().isEnabled();
     } catch {
       return false;
     }
